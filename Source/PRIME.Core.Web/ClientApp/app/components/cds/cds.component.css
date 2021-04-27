@@ -1,0 +1,20 @@
+
+.card {
+    background-color: aliceblue;
+    padding: 20px 10px 10px 10px;
+    border-left: 10px solid blue;
+    margin-bottom:10px;
+}
+
+.card-header {
+    color: #2233cc;
+    font-weight:bold
+}
+
+.card-inner {
+    color: darkgrey;
+}
+
+.cardlabel {
+    margin-left: 10px !important;
+}

@@ -1,0 +1,100 @@
+<h1>PRIME Medication models</h1>
+
+
+
+<div class="alert alert-warning">UI for Drug and Gene Interactions</div>
+<div class="ui raised segment">
+
+    <div class="row">
+        <div class="col-sm-6 col-lg-4">
+
+            <div>
+                <h2 class="ui header">Interaction input</h2>
+                <hr />
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label>Drugs</label>
+                        <input type="text" class="form-control" [(ngModel)]="drugs" placeholder="Drug1,Drug2">
+                        <small class="form-text text-muted">Enter drug names</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Gene</label>
+                        <input type="text" class="form-control" [(ngModel)]="genes" placeholder="Gene1,Gene2">
+                        <small class="form-text text-muted">Enter gene names</small>
+                    </div>
+
+                </div>
+            <div class="btn-toolbar">
+
+                <div class="btn-group">
+                    <button type="button" (click)="execute()" class="btn btn-warning ">Check</button>
+                </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-sm-6 col-lg-8">
+
+
+            <div *ngIf="!drugResults" class="alert alert-info">
+                Enter genes/drugs and press "Check" Button for getting D2D and D2G interactions
+            </div>
+
+
+            <div *ngIf="drugResults">
+                <h2 class="ui header">Drug-Drug interactions</h2>
+                <table class='table' *ngIf="drugResults">
+                    <thead>
+                        <tr>
+                            <th>Source Drug</th>
+                            <th>Target Drug</th>
+                            <th>Interaction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let results of drugResults">
+
+
+                            <td>{{ results.source }}</td>
+                            <td>{{ results.target }}</td>
+                            <td>{{ results.interaction }}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+            <div *ngIf="geneResults">
+                <h2 class="ui header">Drug-Gene interactions</h2>
+                <table class='table' *ngIf="geneResults">
+                    <thead>
+                        <tr>
+                            <th>Drug</th>
+                            <th>Gene</th>
+                            <th>Interaction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let results of geneResults">
+
+
+                            <td>{{ results.source }}</td>
+                            <td>{{ results.target }}</td>
+                            <td>{{ results.interaction }}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</div>

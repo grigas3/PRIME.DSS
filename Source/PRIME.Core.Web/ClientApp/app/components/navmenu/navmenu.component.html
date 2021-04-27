@@ -1,0 +1,50 @@
+<div class='main-nav'>
+    <div class='navbar navbar-inverse'>
+        <div class='navbar-header'>
+            <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                <span class='sr-only'>Toggle navigation</span>
+                <span class='icon-bar'></span>
+                <span class='icon-bar'></span>
+                <span class='icon-bar'></span>
+            </button>
+            <a class='navbar-brand' [routerLink]="['/home']">PRIME.Core.Web</a>
+        </div>
+        <div class='clearfix'></div>
+        <div class='navbar-collapse collapse'>
+            <ul class='nav navbar-nav'>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/home']">
+                        <span class='glyphicon glyphicon-home'></span> Home
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/aggregation']">
+                        <span class='glyphicon glyphicon-th-list'></span> Aggregations
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/dss']">
+                        <span class='glyphicon glyphicon-th-list'></span> DSS Models
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/cds']">
+                        <span class='glyphicon glyphicon-th-list'></span> PRIME CDS
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/medcheck']">
+                        <span class='glyphicon glyphicon-th-list'></span> Medications Check
+                    </a>
+                </li>
+
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/alert']">
+                        <span class='glyphicon glyphicon-th-list'></span> Alerts
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>

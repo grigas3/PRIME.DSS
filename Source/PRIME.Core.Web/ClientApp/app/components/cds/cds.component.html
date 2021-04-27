@@ -1,0 +1,102 @@
+
+
+<div class="alert alert-warning">Demo of CDS use </div>
+<div class="ui raised segment">
+
+    <div class="row">
+        <div class="col-sm-6 col-lg-4">
+            
+            <div >
+                <h2 class="ui header">Treatment input </h2>
+
+              
+                <form #f="ngForm"
+                      (ngSubmit)="onSubmit(f.value)"
+                      class="ui form">
+
+                
+                    <div *ngIf="meds">
+                        <h3>Medications</h3>
+                        <div *ngFor="let med of meds">
+                            <div class="form-group">
+
+                                <label for="{{med.name}}">{{med.name}}</label>
+
+
+
+                                <select id="{{med.code}}" name="{{med.code}}" [ngModel]="med.value" class="form-control">
+                                    <option value="" ng-reflect-ng-value="">Unknown</option>
+                                    <option value="True" ng-reflect-ng-value="True">True</option>
+                                    <option value="False" ng-reflect-ng-value="False">False</option>
+
+                                </select>
+
+                            </div>
+
+
+                        </div>
+                        <hr />
+                        </div>
+
+                        <div *ngIf="pdConditions">
+                            <h3>PD</h3>
+                            <div *ngFor="let med of pdConditions">
+                                <div class="form-group">
+
+                                    <label for="{{med.name}}">{{med.name}}</label>
+
+                                    
+
+
+                                    <select id="{{med.code}}" name="{{med.code}}" [ngModel]="med.value" class="form-control">
+                                        <option value="" ng-reflect-ng-value="">Unknown</option>
+                                        <option value="True" ng-reflect-ng-value="True">True</option>
+                                        <option value="False" ng-reflect-ng-value="False">False</option>
+
+                                    </select>
+
+                                </div>
+
+
+                            </div>
+                            <hr />
+                        </div>
+
+
+
+                        <button type="submit" class="btn btn-success btn-lg">Submit</button>
+
+
+
+</form>
+            </div>
+
+
+        </div>
+        <div class="col-sm-6 col-lg-8">
+
+            <h2 class="ui header">PRIME Suggestions</h2>
+            <div *ngIf="!cards">
+                Submit CDS to get Clinical Guidelines Cards
+            </div>
+
+
+            <div *ngFor="let card of cards" class="card">
+              <div class="card-header">                   
+                  {{ card.summary }}
+                </div>
+              <div _ngcontent-c2 [innerHTML]="card.detail">
+                
+              </div>
+
+
+            </div>
+        
+
+        </div>
+
+        </div>
+   
+   
+
+    </div>
