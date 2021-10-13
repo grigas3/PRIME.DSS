@@ -1,0 +1,49 @@
+
+
+<div class="alert alert-warning">List of all variables used in CDSS Models. For each variable an aggregator or another CDSS model should exist.</div>
+<div class="ui raised segment">
+    
+    
+
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-12">
+            <div>
+
+                <table class='table' *ngIf="variables">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Code Namespace</th>
+                            <th>Models Used</th>
+                            <th>Aggregator</th>
+                            <th>CDSS</th>
+                            <th>Exists</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let variable of variables">
+                            <td>{{variable.name}}</td>
+                            <td>{{variable.code}}</td>
+                            <td>{{variable.codeNameSpace}}</td>
+                            <td>{{variable.modelStr}}</td>
+                            <td>{{variable.aggregator}}</td>
+                            <td>{{variable.cdss}}</td>
+                            <td>{{variable.exists}}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+       
+
+    </div>
+
+
+
+</div>

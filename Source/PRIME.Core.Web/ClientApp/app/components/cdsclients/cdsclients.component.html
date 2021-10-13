@@ -1,0 +1,118 @@
+<h1>PRIME CDSS Clients models</h1>
+
+<div class="alert alert-info">
+<p>This component lists the clients for the PRIME. Each client has its own CDSS Enabled models and specific aggregators mapped the clients FHIR provided resources.</p>
+</div>
+
+<p *ngIf="!clients"><em>Loading...</em></p>
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class='table' *ngIf="clients">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Code</th>
+                    <th>CreatedBy</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let dss of clients">
+
+                    <td>{{ dss.id }}</td>
+                    <td>{{ dss.name }}</td>
+                    <td>{{ dss.description }}</td>
+                    <td>{{ dss.code }}</td>
+                    <td>{{ dss.createdBy }}</td>
+
+                    <td>
+                        <button class="btn btn-sm btn-success" [routerLink]="['/admin/dss',dss.id]">Add Model</button>
+                        <button class="btn btn-sm btn-info" [routerLink]="['/admin/aggregation',dss.id]">Add Aggregator</button>
+                        <button class="btn btn-sm btn-warning" [routerLink]="['/admin/variable',dss.id]">Variables</button>
+                        <button class="btn  btn-sm btn-danger" (click)="delete(dss)">Delete</button>
+
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="row">
+<div class="col-sm-12 col-lg-12">
+  
+    <div class="card">
+        <div class="card-header">
+            Add New Client
+        </div>
+        <div class="card-body">
+            <form #f="ngForm" #values="ngForm"
+
+                  (ngSubmit)="onSubmit()"
+                  class="ui form">
+                <div>
+                    <div >
+                        <div class="form-group">
+
+                            <label for="name">Name</label>
+
+                            <input name="name" class="form-control" [(ngModel)]="newClient.name"/>
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="description">Description</label>
+
+                            <input name="description" class="form-control" [(ngModel)]="newClient.description"/>
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="code">Code</label>
+
+                            <input name="code" class="form-control" [(ngModel)]="newClient.code"/>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+                <button type="submit" class="btn btn-success btn-lg">Submit</button>
+
+
+
+            </form>
+        </div>
+    </div>
+
+
+</div>
+</div>
+
+
+    <div class="row" style="margin-top:20px">
+        <div class="col-sm-12">
+            <table class='table table-bordered' *ngIf="logOutput">
+                <thead>
+                    <tr>
+                        <th>Logs</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let log of logOutput">
+                        <td><span style="color:{{ log.color }}">{{ log.message }}</span></td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>

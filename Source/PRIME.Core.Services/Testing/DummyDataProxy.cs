@@ -76,7 +76,7 @@ namespace PRIME.Core.Services.Testing
                     if (!string.IsNullOrEmpty(filterObj.patientId))
                         query = query.Where(e => e.PatientId == filterObj.patientId);
 
-                    if (!string.IsNullOrEmpty(filterObj.codeId)) query = query.Where(e => e.CodeId == filterObj.codeId);
+                    if (!string.IsNullOrEmpty(filterObj.codeId)) query = query.Where(e => e.Code == filterObj.codeId);
                     aggrTotal = filterObj.aggr == "total";
                 }
 
@@ -151,7 +151,7 @@ namespace PRIME.Core.Services.Testing
                         {
                             Timestamp = (long) (double.Parse(vals[0]) * 1000),
                             PatientId = patientId,
-                            CodeId = headers[i],
+                            Code = headers[i],
                             Value = double.Parse(vals[i])
                         });
                 }

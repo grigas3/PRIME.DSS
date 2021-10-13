@@ -1,0 +1,18 @@
+{
+	"AggregationType": "None",
+	"MetaAggregationType": "Average",
+	"Threshold": true,
+	"ThresholdValue": 5,
+	"ThresholdType": "Fixed",
+	"Code":"DYSKINESIA",
+	"Name":"DYSKINESIA",
+  "Version": "1.0",
+  "MetaScale": 1,
+	"Variables": [{
+			"Source": "www.pdmonitorapp.com",
+			"Code": "DYSKINESIA",
+			"Weight": 1.0
+		}
+	],
+	"Beta": 0.0
+}

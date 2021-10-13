@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Hl7.Fhir.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using PRIME.Core.Services.FHIR;
 
 namespace PRIME.Core.UnitTests
@@ -16,6 +18,94 @@ namespace PRIME.Core.UnitTests
 
             return new FhirProxyConfiguration();
         }
+
+
+        private Bundle CreateTestBundle1()
+        {
+            Hl7.Fhir.Model.Patient patient = new Patient()
+            {
+                BirthDateElement = new Date(1981, 12),
+                Gender = AdministrativeGender.Male
+
+            };
+            List<Bundle.EntryComponent> entries = new List<Bundle.EntryComponent>()
+            {
+                new Bundle.EntryComponent()
+                {
+                    FullUrl = "https://test.com/123",
+                    Resource = patient,
+                }
+            };
+            DateTime d1 = DateTime.Now.AddDays((-5));
+
+            for (int i = 0; i < 5; i++)
+            {
+                entries.Add(new Bundle.EntryComponent()
+                {
+                    FullUrl = "https://test.com/4323",
+                    Resource = new Hl7.Fhir.Model.Observation()
+                    {
+                        Id = $"measurement-1212",
+                        Status = ObservationStatus.Final,
+                        Value = new Quantity()
+                        {
+                            Code = "DYSKINESIA",
+                            Unit = "UPDRS",
+                            System = "http://www.pdmonitorapp.com",
+                            Value = 1
+                        },
+                        Code = new CodeableConcept("http://www.pdmonitorapp.com", "DYSKINESIA"),
+                        ReferenceRange = new List<Hl7.Fhir.Model.Observation.ReferenceRangeComponent>()
+                        {
+                            new Hl7.Fhir.Model.Observation.ReferenceRangeComponent()
+                            {
+                                Text = "UPDRS Range",
+                                Low = new Quantity(0, "UPDRS"),
+                                High = new Quantity(4, "UPDRS")
+                            }
+                        },
+                        Performer = new List<ResourceReference>()
+                        {
+                            new ResourceReference("http://www.pdmonitorapp.com", "Jane Doe")
+                        },
+                        Issued = DateTime.UtcNow
+                    },
+                });
+
+            }
+
+         
+
+
+
+            var bundle= new Bundle()
+            {
+                Id = "Patient-XX-1212",
+                Identifier = new Identifier()
+                {
+                    System = "test",
+                    Value = "123"
+                },
+                Type = Bundle.BundleType.Document,
+                Entry = entries
+            };
+
+
+            return bundle;
+
+
+
+        }
+
+        [TestMethod]
+        public void TestCreateBundle1()
+        {
+            var bundle = CreateTestBundle1();
+
+            var s=JsonConvert.SerializeObject(bundle);
+            File.WriteAllText("fhirDys.json",s);
+        }
+
 
         private Bundle CreateBundle1()
         {

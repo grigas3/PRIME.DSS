@@ -9,7 +9,6 @@ using PRIME.Core.Common.Extensions;
 
 namespace PRIME.Core.Aggregators
 {
-
     /// <summary>
     /// UPDRS Score Aggregator
     /// </summary>
@@ -81,7 +80,7 @@ namespace PRIME.Core.Aggregators
         private string GetFilter(string patientId, string code, long prevJobExecutionTimestamp, string aggrType)
         {
 
-            return $"{{patientid:\"{patientId}\",deviceid:\"\",codeid:\"{code}\",datefrom:{prevJobExecutionTimestamp},dateto:0,aggr:\"{aggrType}\"}}";
+            return $"{{patientid:\"{patientId}\",deviceid:\"\",Code:\"{code}\",datefrom:{prevJobExecutionTimestamp},dateto:0,aggr:\"{aggrType}\"}}";
         }
         /// <summary>
         /// Run Aggregation
@@ -98,7 +97,7 @@ namespace PRIME.Core.Aggregators
         /// <param name="filterType">Overrides the default filter type</param>
         /// <returns></returns>
 
-        public async Task<IEnumerable<IObservation>> Run(string patientId, string code, DateTime? lastExecutionTime,string aggregationType=null,string filterType=null)
+        public async Task<IEnumerable<IObservation>> Run(string patientId, string code,string codeNamepace, DateTime? lastExecutionTime,string aggregationType=null,string filterType=null)
         {
             if (patientId == null)
             {
@@ -160,9 +159,15 @@ namespace PRIME.Core.Aggregators
 
         }
 
+        public Task<IEnumerable<IObservation>> Run(string patientId, string code,string codeNamespace, IEnumerable<PDObservation> rawObs, string config)
+        {
+            throw new NotImplementedException();
+        }
 
-
-
+        public Task<IObservation> RunSingle(string patientId, string code, string codeNamespace, IEnumerable<PDObservation> rawObs, string config)
+        {
+            throw new NotImplementedException();
+        }
 
 
         /// <summary>
@@ -241,11 +246,11 @@ namespace PRIME.Core.Aggregators
             foreach (var c in definition.Variables)
             {
 
-                var v1 = c.Weight * observations.Where(e=>e.CodeId==c.Code).Select(e => e.Value).DefaultIfEmpty().Average();
+                var v1 = c.Weight * observations.Where(e=>e.Code==c.Code).Select(e => e.Value).DefaultIfEmpty().Average();
                 v += v1;
 
             }
-            return new List<IObservation>() { new PDObservation() { Value = v, PatientId = patientId, CodeId = definition.Code, Timestamp = timestamp } };
+            return new List<IObservation>() { new PDObservation() { Value = v, PatientId = patientId, Code = definition.Code, Timestamp = timestamp } };
 
             
 
@@ -280,11 +285,11 @@ namespace PRIME.Core.Aggregators
                 foreach (var c in definition.Variables)
                 {
 
-                    var v1 = c.Weight * observations.Where(e => e.CodeId == c.Code&& e.Timestamp >= i && e.Timestamp < i + dayInterval).Select(e => e.Value).DefaultIfEmpty().Average();
+                    var v1 = c.Weight * observations.Where(e => e.Code == c.Code&& e.Timestamp >= i && e.Timestamp < i + dayInterval).Select(e => e.Value).DefaultIfEmpty().Average();
                     v += v1;
                   
                 }
-                metaObservations.Add(new PDObservation() { CodeId = definition.Code, PatientId = patientId, Timestamp = i, Value = v });
+                metaObservations.Add(new PDObservation() { Code = definition.Code, PatientId = patientId, Timestamp = i, Value = v });
                 
             }
             return metaObservations;
@@ -340,32 +345,32 @@ namespace PRIME.Core.Aggregators
             if (definition.MetaAggregationType == "sum")
             {
 
-                return new List<IObservation>() { new PDObservation() { CodeId = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Sum() } };
+                return new List<IObservation>() { new PDObservation() { Code = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Sum() } };
             }
             else if (definition.MetaAggregationType == "average")
             {
-                return new List<IObservation>() { new PDObservation() { CodeId = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Average() } };
+                return new List<IObservation>() { new PDObservation() { Code = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Average() } };
 
             }
        
             else if (definition.MetaAggregationType == "mfi")
             {
-                return new List<IObservation>() { new PDObservation() { CodeId = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * (metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Max()- metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Average()) } };
+                return new List<IObservation>() { new PDObservation() { Code = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * (metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Max()- metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Average()) } };
 
             }
             else if (definition.MetaAggregationType == "count")
             {
-                return new List<IObservation>() { new PDObservation() { CodeId = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * metaObservations.Count() } };
+                return new List<IObservation>() { new PDObservation() { Code = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * metaObservations.Count() } };
 
             }
             else if (definition.MetaAggregationType == "max")
             {
-                return new List<IObservation>() { new PDObservation() { CodeId = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Max() } };
+                return new List<IObservation>() { new PDObservation() { Code = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Max() } };
 
             }
             else if (definition.MetaAggregationType == "min")
             {
-                return new List<IObservation>() { new PDObservation() { CodeId = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Min() } };
+                return new List<IObservation>() { new PDObservation() { Code = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * metaObservations.Select(e => e.Value).DefaultIfEmpty(0).Min() } };
 
             }
             else if (definition.MetaAggregationType == "std")
@@ -376,7 +381,7 @@ namespace PRIME.Core.Aggregators
                 int fn = metaObservations.Count();
                 var fstd = fq2 / fn - fmean * fmean;
 
-                return new List<IObservation>() { new PDObservation() { CodeId = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * fstd } };
+                return new List<IObservation>() { new PDObservation() { Code = definition.Code, PatientId = patientId, Timestamp = endT, Value = definition.MetaScale * fstd } };
 
             }
             else if (definition.MetaAggregationType == "cv")
@@ -387,7 +392,7 @@ namespace PRIME.Core.Aggregators
                 int fn = metaObservations.Count();
                 var fstd = fq2 / fn - fmean * fmean;
 
-                return new List<IObservation>() { new PDObservation() { CodeId = definition.Code, PatientId = patientId, Timestamp = endT, Value =definition.MetaScale*100*fstd/fmean } };
+                return new List<IObservation>() { new PDObservation() { Code = definition.Code, PatientId = patientId, Timestamp = endT, Value =definition.MetaScale*100*fstd/fmean } };
 
             }
             else
@@ -436,8 +441,8 @@ namespace PRIME.Core.Aggregators
                     {
                         long te = i + j + timeInterval;
                         long ts = i + j;
-                        m += observations.Where(e => e.Timestamp >= ts && e.Timestamp < te&&e.CodeId==c.Code).Select(e => e.Value).DefaultIfEmpty(0).Sum();
-                        n0 += observations.Where(e => e.Timestamp >= ts && e.Timestamp < te && e.CodeId == c.Code).Count();
+                        m += observations.Where(e => e.Timestamp >= ts && e.Timestamp < te&&e.Code==c.Code).Select(e => e.Value).DefaultIfEmpty(0).Sum();
+                        n0 += observations.Where(e => e.Timestamp >= ts && e.Timestamp < te && e.Code == c.Code).Count();
                     }
                     if (n0 > 0)
                     {
@@ -450,7 +455,7 @@ namespace PRIME.Core.Aggregators
                 if (n0 > 0)
                 {                 
                 
-                    metaObservations.Add(new PDObservation() { CodeId = definition.Code, PatientId = patientId, Timestamp = j, Value = v, Weight = n0 });
+                    metaObservations.Add(new PDObservation() { Code = definition.Code, PatientId = patientId, Timestamp = j, Value = v, Weight = n0 });
                 }
 
             }

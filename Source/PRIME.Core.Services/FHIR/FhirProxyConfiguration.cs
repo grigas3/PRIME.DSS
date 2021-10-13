@@ -31,5 +31,10 @@ namespace PRIME.Core.Services.FHIR
         /// Requires authentication
         /// </summary>
         public bool RequiresAuthentication { get; set; }
+
+        /// <summary>
+        /// Token
+        /// </summary>
+        public string Token { get; set; }
     }
 }

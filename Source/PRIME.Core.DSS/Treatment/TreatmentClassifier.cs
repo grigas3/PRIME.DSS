@@ -1,11 +1,68 @@
-﻿namespace PRIME.Core.DSS.Treatment
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection.Metadata;
+using Newtonsoft.Json;
+using PRIME.Core.Common.Interfaces;
+using PRIME.Core.DSS.Fuzzy;
+
+namespace PRIME.Core.DSS.Treatment
 {
+    public class TreatmentProbModel : NaiveBayes
+    {
+
+    }
+
     /// <summary>
     /// Treatment Classifier
     /// Each treatment option has a classifier 
     /// </summary>
-    public class TreatmentClassifier : NaiveBayes
+    public class TreatmentClassifier: ITreatmentClassifier
     {
+        /// <summary>
+        /// Classifier based on Naive Bayes Model
+        /// </summary>
+        public TreatmentProbModel NaiveModel { get; set; }
+
+
+        /// <summary>
+        /// Classifier Based on Rules 
+        /// </summary>
+        public FuzzyCollection RuleModel { get; set; }
+
+
+        [JsonIgnore]
+        public IEnumerable<IVariable> Variables
+        {
+
+            get
+            {
+
+                List<IVariable> variables=new List<IVariable>();
+
+                if(Preconditions!=null)
+                    variables.AddRange(Preconditions);
+                if (NaiveModel != null)
+                    variables.AddRange(NaiveModel.Variables);
+
+
+                if (RuleModel != null)
+                    variables.AddRange(RuleModel.Variables);
+
+                return variables;
+            }
+
+        }
+
+
+        public IEnumerable<FuzzyVariable> Preconditions
+        {
+
+            get;
+            set;
+
+        }
+
+
         /// <summary>
         /// Treatment Name
         /// </summary>
@@ -35,5 +92,30 @@
         /// </summary>
         public string Summary { get; set; }
 
+
+        public static TreatmentClassifier FromJson(string json)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<TreatmentClassifier>(json);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+        public string Id { get; set; }
+
     }
+
+    public interface ITreatmentClassifier
+    {
+
+
+
+    }
+
 }

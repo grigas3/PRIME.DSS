@@ -5,42 +5,44 @@
   "Option": "Add",
   "Summary": "Offer a choice of dopamine agonists, as an adjunct to levodopa for people with Parkinson's disease e who have developed dyskinesia or motor fluctuations despite optimal levodopa therapy, after discussing the person's individual clinical circumstances, for example, their Parkinson's disease symptoms, comorbidities and risks from polypharmacy, the person's individual lifestyle circumstances, preferences, needs and goals the potential benefits and harms of the specific drug.",
   "Description": "Offer a choice of dopamine agonists, as an adjunct to levodopa for people with Parkinson's disease who have developed dyskinesia or motor fluctuations despite optimal levodopa therapy, after discussing the person's individual clinical circumstances, for example, their Parkinson's disease symptoms, comorbidities and risks from polypharmacy, the person's individual lifestyle circumstances, preferences, needs and goals the potential benefits and harms of the specific drug.",
-  "Variables": [
-    {
-      "Name": "LEVODOPA",
-      "Code": "FLUCTUATIONS",
-      "Weight": 0.8,
-      "Prior": 0.2
-    },
-    {
-      "Name": "MAO",
-      "Code": "MAO",
-      "Weight": 0,
-      "Prior": 0.2
-    },
-    {
-      "Name": "COMT",
-      "Code": "COMT",
-      "Weight": 0,
-      "Prior": 0.2
-    },
-    {
-      "Name": "MOTOR",
-      "Code": "MOTOR",
-      "Weight": 0.9,
-      "Prior": 0.8
-    },
-    {
-      "Name": "Fluctuations",
-      "Code": "FLUCTUATIONS",
-      "Weight": 0.9,
-      "Prior": 0.2
-    },
-    {
-      "Name": "Patient with dyskinesia",
-      "Code": "DYSKINESIA",
-      "Weight": 0.9,
-      "Prior": 0.2
-    }
-  ]
+  "NaiveModel": {
+    "Variables": [
+      {
+        "Name": "LEVODOPA",
+        "Code": "FLUCTUATIONS",
+        "Weight": 0.8,
+        "Prior": 0.2
+      },
+      {
+        "Name": "MAO",
+        "Code": "MAO",
+        "Weight": 0,
+        "Prior": 0.2
+      },
+      {
+        "Name": "COMT",
+        "Code": "COMT",
+        "Weight": 0,
+        "Prior": 0.2
+      },
+      {
+        "Name": "MOTOR",
+        "Code": "MOTOR",
+        "Weight": 0.9,
+        "Prior": 0.8
+      },
+      {
+        "Name": "Fluctuations",
+        "Code": "FLUCTUATIONS",
+        "Weight": 0.9,
+        "Prior": 0.2
+      },
+      {
+        "Name": "Patient with dyskinesia",
+        "Code": "DYSKINESIA",
+        "Weight": 0.9,
+        "Prior": 0.2
+      }
+    ]
+  }
 }

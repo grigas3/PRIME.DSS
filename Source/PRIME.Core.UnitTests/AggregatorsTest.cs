@@ -4,8 +4,11 @@ using PRIME.Core.Aggregators.Testing;
 using PRIME.Core.Common.Interfaces;
 using PRIME.Core.Services.Testing;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using PRIME.Core.Models;
 
 namespace PRIME.Core.UnitTests
 {
@@ -30,9 +33,7 @@ namespace PRIME.Core.UnitTests
 
 
         }
-
-
-
+        
         /// <summary>
         /// Test ONOFF Total aggregation
         /// </summary>
@@ -49,7 +50,7 @@ namespace PRIME.Core.UnitTests
 
             GenericAggregator aggregator = new GenericAggregator(proxy, null, new DummyAggrDefinitionProvider());
 
-            var observations = await aggregator.Run(patientId, "STOFFDUR", null);
+            var observations = await aggregator.Run(patientId, "STOFFDUR",null, null);
 
             Assert.IsTrue(observations.Count() > 0);
             var mean = observations.Select(e => e.Value).Average();
@@ -73,7 +74,7 @@ namespace PRIME.Core.UnitTests
 
             GenericAggregator aggregator = new GenericAggregator(proxy, null, new DummyAggrDefinitionProvider());
 
-            var observations=await aggregator.Run(patientId, "UPDRSTOTAL", null);
+            var observations=await aggregator.Run(patientId, "UPDRSTOTAL", null, null);
 
             Assert.IsTrue(observations.Count() > 0);
             var mean = observations.Select(e => e.Value).Average();
@@ -100,7 +101,7 @@ namespace PRIME.Core.UnitTests
 
             GenericAggregator aggregator = new GenericAggregator(proxy, null, new DummyAggrDefinitionProvider());
 
-            var observations = await aggregator.Run(patientId, "UPDRSDAY", null);
+            var observations = await aggregator.Run(patientId, "UPDRSDAY", null, null);
 
             Assert.IsTrue(observations.Count() > 0);
             var mean = observations.Select(e => e.Value).Average();
@@ -126,7 +127,7 @@ namespace PRIME.Core.UnitTests
 
             GenericAggregator aggregator = new GenericAggregator(proxy, null, new DummyAggrDefinitionProvider());
 
-            var observations = await aggregator.Run(patientId, "UPDRS", null);
+            var observations = await aggregator.Run(patientId, "UPDRS", null, null);
 
             Assert.IsTrue(observations.Count() > 0);
             var mean = observations.Select(e => e.Value).Average();
@@ -176,7 +177,7 @@ namespace PRIME.Core.UnitTests
             GenericAggregator aggregator = new GenericAggregator(proxy, null, new DummyAggrDefinitionProvider());
 
             //var mfiObservation = await aggregator.Run(patientId, "STFLUCT", null, null, null);
-            var mfiObservation = await aggregator.Run(patientId, "UPDRS", null, null, "mfi");
+            var mfiObservation = await aggregator.Run(patientId, "UPDRS", null, null, null, "mfi");
 
 
 
@@ -204,7 +205,7 @@ namespace PRIME.Core.UnitTests
 
             GenericAggregator aggregator = new GenericAggregator(proxy, null, new DummyAggrDefinitionProvider());
 
-            var mfiObservation = await aggregator.Run(patientId, "STFLUCT", null, null, null);
+            var mfiObservation = await aggregator.Run(patientId, "STFLUCT", null, null, null, null);
             //var mfiObservation = await aggregator.Run(patientId, "UPDRS", null, null, "mfi");
 
 

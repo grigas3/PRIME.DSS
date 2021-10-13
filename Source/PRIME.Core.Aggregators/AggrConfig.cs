@@ -19,7 +19,7 @@ namespace PRIME.Core.Aggregators
     public class AggrConfig
     {
 
-
+        public string Id { get; set; }
 
         /// <summary>
         /// Aggregation Type. Possible values
@@ -27,7 +27,7 @@ namespace PRIME.Core.Aggregators
         /// day: Aggregate observation per day
         /// total: Aggregation of all values
         /// </summary>
-        [JsonRequired]
+     //   [JsonRequired]
         [Description("Aggregation Type. Possible values 1) time: Aggregate observations per time of day, 2) day: Aggregate observation per day, 3) total: Aggregation of all values")]
         public string AggregationType { get; set; }
 
@@ -46,7 +46,7 @@ namespace PRIME.Core.Aggregators
         /// count: count number of observations
         /// none: Get all metaobservations
         /// </summary>
-        [JsonRequired]
+   //     [JsonRequired]
         [Description("Meta Aggregation Type.  Meta Aggregation occurs after aggregation on raw observations and filtering. Possible values 1) sum: Sum of observations 2) average: Average of observations, 3) std: Std of observations, 4) max: max of observations 5) min: min of observations, 6) mfi: Mean Fluctuation Index, 7) cv:  Coefficient of variation, 8) count: count number of observations, 9)  none: Get all metaobservations         ")]
         public string MetaAggregationType { get; set; }
 
@@ -55,12 +55,26 @@ namespace PRIME.Core.Aggregators
         /// Scale meta aggregated value
         /// Default 1.0
         /// </summary>
-
-        [DefaultValue(1)]
-        [JsonRequired]
-        [Description("Scale meta aggregated value")]
         public double MetaScale { get; set; }
+        
+      //  [JsonRequired]
+        [Description("Scale meta aggregated value")]
+        public double? MetaScaleA { get; set; }
 
+
+        
+        //  [JsonRequired]
+        [Description("Scale meta aggregated value")]
+        public double? MetaScaleB { get; set; }
+
+        public double? Min { get; set; }
+        public double? Max { get; set; }
+
+
+        /// <summary>
+        /// Namespace
+        /// </summary>
+        public string CodeNameSpace { get; set; }
 
         /// <summary>
         /// Variables
@@ -127,6 +141,8 @@ namespace PRIME.Core.Aggregators
         [Description("Version of the aggregation definition")]
         [JsonRequired]
         public string Version { get; set; }
+
+        public string OutputCode { get; set; }
 
         #region Helpers
         /// <summary>
@@ -215,7 +231,24 @@ namespace PRIME.Core.Aggregators
             AggrConfig ret = null;            
              return   ret = JsonConvert.DeserializeObject<AggrConfig>(configJson);
             
+
+
         }
+        public static double Sigmoid(double x, double a, double c)
+        {
+            return 1.0 / (1.0 + Math.Exp(-a * (x - c)));
+        }
+
+        public double Scale(double v)
+        {
+            if(MetaScaleA.HasValue&&MetaScaleB.HasValue)
+                return Math.Round(Sigmoid(v, MetaScaleA.Value, MetaScaleB.Value),2);
+
+            return v;
+
+
+        }
+
         #endregion
 
 
@@ -233,7 +266,6 @@ namespace PRIME.Core.Aggregators
         /// Source of Variable. The source can be 1) observation and 2) clinical
         /// </summary>
         [Description("Source of the variable the source can be 1) observation and 2) clinical")]
-        [JsonRequired]
         public string Source { get; set; }
         /// <summary>
         /// Code 
@@ -247,6 +279,11 @@ namespace PRIME.Core.Aggregators
         [Description("Variable weight. This is the A in the Ax+B regression function.")]
         [JsonRequired]
         public double Weight { get; set; }
+
+
+        public double? Min { get; set; }
+
+        public double? Max { get; set; }
 
     }
 }

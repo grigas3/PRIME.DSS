@@ -6,6 +6,7 @@ using PRIME.Core.DSS;
 using PRIME.Core.Web.Entities;
 using System;
 using System.IO;
+using PRIME.Core.Context.Entities;
 
 namespace PRIME.Core.Web.Extensions
 {
@@ -87,8 +88,15 @@ namespace PRIME.Core.Web.Extensions
         public static AggrConfig GetConfig(this AggrModel model)
         {
 
-            var dssConfig = JsonConvert.DeserializeObject<AggrConfig>(model.Config);
-            return dssConfig;
+            if (!string.IsNullOrEmpty(model.Config))
+            {
+                var dssConfig = JsonConvert.DeserializeObject<AggrConfig>(model.Config);
+                return dssConfig;
+            }
+            else
+            {
+                return new AggrConfig();
+            }
 
 
 

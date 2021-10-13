@@ -53,16 +53,19 @@ namespace PRIME.Core.Web
         /// <param name="services"></param>        
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DSSContext>(options => options.UseInMemoryDatabase("dssdb"));
+
+            services.AddDbContext<DSSContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DSSContext")));
+            //services.AddDbContext<DSSContext>(options => options.UseInMemoryDatabase("dssdb"));
             // Add application services.
             services.AddTransient<IDSSRunner, DSSRunner>();
-            services.AddSingleton<ICDSService, CDSService>();
+            services.AddTransient<ICDSService, CDSService>();
             services.AddTransient<IMedCheckService, MedCheckService>();
             services.AddTransient<IDrugRepository, DrugService>();
             //TODO: Replace with proper data proxy
             //services.AddTransient<IDataProxy, DataProxy>();
             services.AddTransient<IDataProxy, DummyDataProxy>();
-            services.AddTransient<IAggregator, GenericAggregator>();
+            services.AddTransient<IAggregator, PRIMEAggregator>();
             services.AddTransient<IGenericLogger, LoggingProvider>();
             services.AddTransient<IAggrDefinitionProvider, AggrDefinitionProvider>();
             services.AddTransient<IDSSDefinitionProvider,DSSDefinitionProvider>();
@@ -72,6 +75,7 @@ namespace PRIME.Core.Web
             services.AddTransient<ICommunicationParamProvider, CommunicationParamProvider>();
             services.AddTransient<IRecurringJob, AlertEvaluationJob>();
             services.AddTransient<IJobFactory, JobFactory>();
+            services.AddTransient<IRepositoryService, RepositoryService>();
             services.AddTransient<IAlertInputProvider, AlertInputProvider>();
 
             

@@ -17,7 +17,7 @@ namespace PRIME.Core.DSS.Treatment
         
 
         /// <summary>
-        /// Get Probability
+        /// Get Value
         /// </summary>
         /// <param name="val"></param>
         /// <param name="prior"></param>

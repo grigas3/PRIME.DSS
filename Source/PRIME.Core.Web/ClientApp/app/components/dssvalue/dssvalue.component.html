@@ -1,7 +1,34 @@
 <div class="alert alert-warning">For this demo the only valid patient id is <b>1</b></div>
 <div class="ui raised segment">
-
     <div class="row">
+        <div class="col-sm-12 col-lg-12">
+           
+            <div >
+                <form>
+                <h2 class="ui header">Demo for DSS {{modelId}} </h2>
+
+                <label>Enter Patient Id</label>
+                
+                <input [(ngModel)]="patientId" class="form-control">
+
+
+             
+                <label>Enter FHIR Reource</label>
+                   
+                    <textarea [(ngModel)]="bundleJson" class="form-control"></textarea>
+             
+
+
+
+
+                <button type="button" (click)="execute()" class="btn btn-success btn-lg">Execute</button>
+                    </form>
+            </div>
+
+
+        </div>
+    </div>
+    <!--<div class="row">
         <div class="col-sm-6 col-lg-4">
             <div *ngIf="!dssConfig">
                 Loading...
@@ -81,7 +108,7 @@
         
         </div>
 
-        </div>
+        </div>-->
    
    
 

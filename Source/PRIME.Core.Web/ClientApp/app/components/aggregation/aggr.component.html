@@ -1,20 +1,18 @@
 <h1>PRIME Aggregation models</h1>
-
-<p>This component list the aggregation models of the server</p>
+<div class="alert alert-info">
+    <p>This component list the aggregation models of the server</p>
+</div>
 
 <p *ngIf="!aggrModels"><em>Loading...</em></p>
-<div class="btn-group">
-    <button class="btn btn-danger" (click)="addDummyData();">Add Dummy</button>
-    <button class="btn btn-success" (click)="refresh();">Reload</button>
-    <button class="btn btn-info" (click)="getSchema();">Get Schema</button>
-</div>
+
 <div class="row">
     <div class="col-sm-12">
         <table class='table' *ngIf="aggrModels">
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Title</th>
+                    <th>Name</th>
+                    <th>ClientName</th>
                     <th>Description</th>
                     <th>CreatedBy</th>
                     <th></th>
@@ -24,12 +22,19 @@
                 <tr *ngFor="let aggr of aggrModels">
 
                     <td>{{ aggr.id }}</td>
-                    <td>{{ aggr.title }}</td>
+                    <td>{{ aggr.name }}</td>
+                    <td>{{ aggr.cdsClientName }}</td>
                     <td>{{ aggr.description }}</td>
                     <td>{{ aggr.createdBy }}</td>
+                   
                     <td>
-                    <td>
-                        <a class="btn btn-success" [routerLink]="['/aggrvalue',aggr.id]">Test Aggregation</a>
+
+
+                        <!--<button class="btn btn-sm  btn-success" (click)="edit(dss)">Edit</button>-->
+
+                        <button class="btn btn-sm btn-info" [routerLink]="['/admin/aggrvalue',aggr.id]">Test</button>
+                        <button class="btn btn-sm btn-default" [routerLink]="['/admin/aggreditor',aggr.id]">Edit</button>
+                        <button class="btn btn-sm btn-danger" (click)="delete(dss)">Delete</button>
 
 
                     </td>
@@ -39,13 +44,89 @@
         </table>
     </div>
 
-   </div>
+</div>
+
+
+
 <div class="row">
+    <div class="col-sm-6 col-lg-12">
+
+        <div class="card">
+            <div class="card-header">
+                Add New Aggregation
+            </div>
+            <div class="card-body">
+                <form #f="ngForm" #values="ngForm"
+                      (ngSubmit)="onSubmit()"
+                      class="ui form">
+                    <div>
+                        <div>
+                            <div class="form-group">
+
+                                <label for="name">Name</label>
+
+                                <input name="Title" class="form-control" [(ngModel)]="newAggr.name"/>
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="code">Code</label>
+
+                                <input name="code" class="form-control" [(ngModel)]="newAggr.code"/>
+                            </div>
+                            <div class="form-group">
+
+                                <label for="version">Version</label>
+
+                                <input name="version" class="form-control" [(ngModel)]="newAggr.version"/>
+                            </div>
+                            <div class="form-group">
+
+                                <label for="description">Description</label>
+
+                                <input name="description" class="form-control" [(ngModel)]="newAggr.description"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="cdsClientId">Client</label>
+
+                                <select [(ngModel)]="newAggr.cdsClientId" name="newAggr.cdsClientId" class="form-control">
+
+                                    <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
+                                </select>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="config">Config</label>
+
+                                <input name="config" class="form-control" [(ngModel)]="newAggr.config"/>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+
+                    <button type="submit" class="btn btn-success btn-lg">Submit</button>
+
+
+
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="row" style="margin-top:20px">
     <div class="col-sm-12">
         <table class='table table-bordered' *ngIf="logOutput">
             <thead>
                 <tr>
-                    <th>Message</th>
+                    <th>Logs</th>
 
                 </tr>
             </thead>

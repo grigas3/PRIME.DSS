@@ -10,6 +10,7 @@ export class AggrValueComponent implements OnInit {
     public aggrConfig: AggrConfig;
     public aggrOutput: PDObservation[];
     public patientId: string;
+    public bundle: string;
     private httpClient: Http;
     private baseUrl: string;
     private modelId: string;    
@@ -21,8 +22,9 @@ export class AggrValueComponent implements OnInit {
 
         this.baseUrl = baseUrl;
         this.httpClient = http;
-       
-       
+        this.bundle = "";
+        this.patientId = "";
+
     }
 
     ngOnInit() {
@@ -53,34 +55,49 @@ export class AggrValueComponent implements OnInit {
     }
  
     execute(): void {
-        
-        var url = this.baseUrl + 'api/v1/aggregation/evaluate?code=' + this.code + '&patientId=' + this.patientId;              
-        this.httpClient.get(url).subscribe(result => {
-            var self = this;
-            this.aggrOutput = result.json() as PDObservation[];
-            console.log(this.aggrOutput.map(function (item) {
-                return item.value;
-            }));
-            console.log(this.aggrOutput.map(function (item) {
-                return self.timeConverter(item.timestamp);
-            }))
-        
-            let _lineChartData: Array<any>= [
-                {
-                    data: this.aggrOutput.map(function (item) {
-                        return item.value;
-                    }), label: this.code
-                }
-            ];
 
-            let _lineChartLabels: Array < any >= this.aggrOutput.map(function (item) {
-                return self.timeConverter(item.timestamp);
-            });
-            this.lineChartData = _lineChartData;
-            this.lineChartLabels = _lineChartLabels;
+        var url = this.baseUrl + 'api/v1/fhireval/';
 
-         ;
+        var model = {} as FHIREvalModel;
+
+        model.patientId = this.patientId;
+        model.id = this.modelId;
+        model.bundleJson = this.bundle;
+
+        this.httpClient.post(url, model).subscribe(result => {
+            console.log(result);
+            //this.logOutput.push({
+            //    message: 'Aggr Models Saved', color: "#982315", error: false
+            //});
+            //this.refresh();
         }, error => console.error(error));
+
+        //this.httpClient.post(url).subscribe(result => {
+        //    var self = this;
+        //    this.aggrOutput = result.json() as PDObservation[];
+        //    console.log(this.aggrOutput.map(function (item) {
+        //        return item.value;
+        //    }));
+        //    console.log(this.aggrOutput.map(function (item) {
+        //        return self.timeConverter(item.timestamp);
+        //    }))
+        
+        //    let _lineChartData: Array<any>= [
+        //        {
+        //            data: this.aggrOutput.map(function (item) {
+        //                return item.value;
+        //            }), label: this.code
+        //        }
+        //    ];
+
+        //    let _lineChartLabels: Array < any >= this.aggrOutput.map(function (item) {
+        //        return self.timeConverter(item.timestamp);
+        //    });
+        //    this.lineChartData = _lineChartData;
+        //    this.lineChartLabels = _lineChartLabels;
+
+        // ;
+        //}, error => console.error(error));
         
         
     }
@@ -149,7 +166,12 @@ interface AggrConfig {
     name: string;
     code: string;
 }
-
+//Aggregation Confi Model
+interface FHIREvalModel {
+    bundleJson: string;
+    patientId: string;
+    id: string;
+}
 //Aggregation Confi Model
 interface PDObservation {
     patientId: string;

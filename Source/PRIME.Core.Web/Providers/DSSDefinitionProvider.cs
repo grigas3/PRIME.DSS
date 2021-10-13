@@ -3,6 +3,7 @@ using PRIME.Core.Common.Interfaces;
 using PRIME.Core.Web.Entities;
 using System;
 using System.Linq;
+using PRIME.Core.Context.Entities;
 
 namespace PRIME.Core.Web.Context
 {

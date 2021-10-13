@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,7 +9,41 @@ using PRIME.Core.Services.FHIR;
 
 namespace PRIME.Core.UnitTests
 {
+    [TestClass]
+    public class PDMonitorPatientTest
+    {
 
+
+        private FhirProxyConfiguration CreateProxy()
+        {
+
+            return new FhirProxyConfiguration()
+            {
+                Headers = new List<FhirHeader>() { },//new FhirHeader(){Key= "Content-Type",Value="application/json"}},
+                UserName = "spyros",
+                Password = "s123!@#",
+                RequiresAuthentication = true,
+                Url = "https://localhost:44341/api/fhir/",
+                AuthUrl = "https://localhost:44341/token"
+            };
+        }
+
+        [TestMethod]
+        public async Task Test_PDMonitor_GetPatient()
+        {
+            int patientId = 1677;
+
+            FhirPatientQuery  query=new FhirPatientQuery(CreateProxy());
+
+            var res=await query.Get();
+
+            Assert.IsTrue(res.Any());
+
+
+        }
+      
+
+    }
     [TestClass]
     public class PDMonitorIntegrationTest
     {

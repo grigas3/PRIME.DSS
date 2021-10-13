@@ -1,7 +1,27 @@
 {
-"Name":"Impulsivity disorder",
-"Code":"IMPULSIVITY",
-"CodeNamespace":"PRIME",
-
-Variables:[{Name:"Dopamines",Code:"DOPAMINE",Weight:0.9,Prior:0.5},{Name:"Impulsivity History",Code:"IMPHISTORY",Weight:0.7,Prior:0.2},{Name:"ALCOHOL",Code:"ALCOHOL",Weight:0.65,Prior:0.3}]
+  "Name": "Impulsivity disorder",
+  "Code": "IMPULSIVITY",
+  "CodeNamespace": "PRIME",
+  "NaiveModel": {
+    "Variables": [
+      {
+        "Name": "Dopamines",
+        "Code": "DOPAMINE",
+        "Weight": 0.9,
+        "Prior": 0.5
+      },
+      {
+        "Name": "Impulsivity History",
+        "Code": "IMPHISTORY",
+        "Weight": 0.7,
+        "Prior": 0.2
+      },
+      {
+        "Name": "ALCOHOL",
+        "Code": "ALCOHOL",
+        "Weight": 0.65,
+        "Prior": 0.3
+      }
+    ]
+  }
 }

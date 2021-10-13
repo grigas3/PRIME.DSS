@@ -38,7 +38,7 @@ namespace PRIME.Core.Web.Controllers
         [HttpGet]
        public IActionResult Get(string patientId,string code)
        {
-            var observation=_aggregator.Run(patientId, code,null);
+            var observation=_aggregator.Run(patientId, code,null,null);
             //TODO: this may be refactored to the same response of observation controller
             return Ok(observation);
 

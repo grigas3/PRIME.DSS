@@ -4,9 +4,10 @@
 
 <p *ngIf="!dssModels"><em>Loading...</em></p>
 <div class="btn-group">
-    <button class="btn btn-danger" (click)="addDummyData();">Add Dummy</button>
-    <button class="btn btn-success" (click)="refresh();">Reload</button>
-    <button class="btn btn-success" (click)="getSchema();">Get Schema</button>
+
+    
+    <button class="btn btn-info"  [routerLink]="['/admin/variable']">View Variables</button>
+
 </div>
 <div class="row">
     <div class="col-sm-12">
@@ -14,8 +15,11 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Title</th>
+                    <th>Name</th>
                     <th>Description</th>
+                    
+                    <th>Treatment</th>
+                    <th>Client</th>
                     <th>CreatedBy</th>
                     <th></th>
                 </tr>
@@ -24,12 +28,21 @@
                 <tr *ngFor="let dss of dssModels">
 
                     <td>{{ dss.id }}</td>
-                    <td>{{ dss.title }}</td>
+                    <td>{{ dss.name }}</td>
+
                     <td>{{ dss.description }}</td>
+
+                    <td>
+                        {{ dss.treatmentSuggestion}}
+                    </td>
+                    <td>{{dss.cdsClientName}}</td>
                     <td>{{ dss.createdBy }}</td>
 
                     <td>
-                        <a class="btn btn-success" [routerLink]="['/dssvalue',dss.id]">Test Form</a>
+                        <a class="btn  btn-sm btn-success" (click)="edit(dss)">Edit</a>
+                        <a class="btn  btn-sm btn-danger" (click)="delete(dss)">Delete</a>
+                        <a class="btn  btn-sm btn-info" [routerLink]="['/admin/cds',dss.id]">Test Form</a>
+                        <a class="btn  btn-sm btn-warning" [routerLink]="['/admin/dsseditor',dss.id]">Edit Model</a>
 
 
                     </td>
@@ -40,6 +53,98 @@
 </div>
 
 
+<div class="row">
+    <div class="col-sm-12 col-lg-12">
+  
+    <div class="card">
+        <div class="card-header">
+            Add New Model
+        </div>
+        <div class="card-body">
+      
+
+            
+            <form #f="ngForm" #values="ngForm"
+                  (ngSubmit)="onSubmit()"
+                  class="ui form">
+                <div>
+                    <div>
+                        <div class="form-group">
+
+                            <label for="Name">Name</label>
+
+                            <input name="Name" class="form-control" [(ngModel)]="newDSS.name" />
+                        </div>
+                        <div class="form-group">
+
+                            <label for="Code">Code</label>
+
+                            <input name="Code" class="form-control" [(ngModel)]="newDSS.code" />
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="Version">Version</label>
+
+                            <input name="Version" class="form-control" [(ngModel)]="newDSS.version" />
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="description">Description</label>
+
+                            <input name="description" class="form-control" [(ngModel)]="newDSS.description" />
+                        </div>
+                        <div class="form-group">
+
+                            <label for="treatmentSuggestion">Treatment (not condition)</label>
+
+                            <input type="checkbox" name="treatmentSuggestion" [(ngModel)]="newDSS.treatmentSuggestion" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cdsClientId">Client</label>
+
+                            <select [(ngModel)]="newDSS.cdsClientId" name="cdsClientId" class="form-control">
+
+                                <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label for="config">Select config from template</label>
+                            <div class="input-group">
+                                <select [(ngModel)]="newDSS.selectedTemplate" name="selectedTemplate" class="form-control">
+
+                                    <option *ngFor="let c of templates" [value]="c.name">{{c.name}}</option>
+                                </select>
+                                <a class="btn btn-info"  (click)="addTemplate()">Add</a>
+                            </div>
+                            </div>
+                        <div class="form-group">
+
+                            <label for="config">Config</label>
+
+                            <input name="config" class="form-control" [(ngModel)]="newDSS.config" />
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+                <button type="submit" class="btn btn-success btn-lg">Submit</button>
+
+
+
+            </form>
+        </div>
+
+    </div>
+    </div>
+</div>
 
 
     <div class="row">

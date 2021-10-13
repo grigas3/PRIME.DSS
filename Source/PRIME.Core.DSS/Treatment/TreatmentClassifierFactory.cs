@@ -2,9 +2,16 @@
 using System.IO;
 using Newtonsoft.Json;
 using PRIME.Core.Common.Interfaces;
+using PRIME.Core.Context.Entities;
+using PRIME.Core.DSS.Fuzzy;
 
 namespace PRIME.Core.DSS.Treatment
 {
+    public abstract class BasedClassifierFactory
+    {
+
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -28,6 +35,158 @@ namespace PRIME.Core.DSS.Treatment
             }
         }
 
+
+        /// <summary>
+        /// Add Treatment Classifier
+        /// </summary>
+        /// <param name="classifier"></param>
+        public void Add(TreatmentClassifier classifier)
+        {
+            _treatmentClassifiers.Add(classifier);
+
+        }
+
+
+        /// <summary>
+        /// Get Treatment Options based on Naive Bayes Classifier
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="classifier"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private static List<TreatmentOption> GetTreatmentNaiveOptions(IConditionRepository repository,TreatmentClassifier classifier,NaiveBayes model)
+        {
+            List<TreatmentOption> options = new List<TreatmentOption>();
+            List<TreatmentFactor> factors = new List<TreatmentFactor>();
+            List<NaiveVarInstance> vInputs = new List<NaiveVarInstance>();
+
+
+            foreach (var v in model.Variables)
+            {
+                var b = repository.HasCondition(v.Code.ToLower(), classifier.CodeNamespace);
+
+                if (b.HasValue)
+                {
+                    if (v.Weight > 0.5)
+                    {
+                        factors.Add(new TreatmentFactor()
+                        {
+                            Effect = b.Value ? TreatmentFactorEffect.Positive : TreatmentFactorEffect.Negative,
+                            Name = v.Name
+                        });
+                    }
+                    else
+                    {
+                        factors.Add(new TreatmentFactor()
+                        {
+                            Effect = b.Value ? TreatmentFactorEffect.Negative : TreatmentFactorEffect.Positive,
+                            Name = v.Name
+                        });
+                    }
+
+                    vInputs.Add(new NaiveVarInstance() { Code = v.Code.ToLower(), Name = v.Name, Present = b.Value });
+                }
+                else
+                {
+                    factors.Add(new TreatmentFactor() { Effect = TreatmentFactorEffect.Undetermined, Name = v.Name });
+                }
+            }
+
+
+            var p = model.GetOutput(vInputs);
+
+            if (p > 0.1)
+            {
+                options.Add(new TreatmentOption()
+                {
+                    Name = classifier.Name,
+                    ReplacementCode = classifier.ReplacementCode,
+                    Code = classifier.Code.ToLower(),
+                    Option = classifier.Option,
+                    Probability = p,
+                    Factors = factors,
+                    Summary = classifier.Summary
+                });
+            }
+
+            return options;
+
+
+        }
+
+        /// <summary>
+        /// Get Treatment Options based on Rules
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="classifier"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private static List<TreatmentOption> GetTreatmentRuleOptions(IConditionRepository repository, TreatmentClassifier classifier, FuzzyCollection model)
+        {
+            List<TreatmentOption> options = new List<TreatmentOption>();
+            List<TreatmentFactor> factors = new List<TreatmentFactor>();
+            List<NaiveVarInstance> vInputs = new List<NaiveVarInstance>();
+
+            Dictionary<string,object> valueDictionary=new Dictionary<string, object>();
+            foreach (var v in model.Variables)
+            {
+
+                string codeNameSpace = v.CodeNameSpace;
+                if (v.CodeNameSpace == null)
+                    codeNameSpace = "PRIME";
+
+                var b = repository.GetCondition(v.Code, codeNameSpace);
+
+                if (b.HasValue)
+                {
+                    valueDictionary.Add(v.Code, b.Value);
+                }
+
+            }
+            var p = FuzzyEngine.GetInference(model, valueDictionary);
+
+            List<Precondition> preconditions=new List<Precondition>();
+            if (classifier.Preconditions != null)
+            {
+                foreach (var pr in classifier.Preconditions)
+                {
+
+                    var b=repository.HasCondition(pr.Code, "PRIME");
+                    preconditions.Add(new Precondition()
+                    {
+                        Code=pr.Code,
+                        Name=pr.Name,
+                        Presence = b
+
+                    });
+
+                    
+                }
+            }
+
+
+
+            options.Add(new TreatmentOption()
+                {
+                    Name = classifier.Name,
+                    ReplacementCode = classifier.ReplacementCode,
+                    Code = classifier.Code.ToLower(),
+                    Option = classifier.Option,
+                    Probability = p.Result,
+                    Factors = factors,
+                    Summary = classifier.Summary,
+                    Preconditions=preconditions,
+                    MissingVariables=p.MissingVariables
+                });
+            
+
+
+            return options;
+
+        }
+
+       
+
         /// <summary>
         /// Get Options
         /// </summary>
@@ -38,11 +197,21 @@ namespace PRIME.Core.DSS.Treatment
             List<TreatmentOption> options = new List<TreatmentOption>();
             foreach (var c in _treatmentClassifiers)
             {
-                var ec = repository.HasCondition(c.Code.ToLower(),null);
-                bool? er = new bool?();
-                if (!string.IsNullOrEmpty(c.ReplacementCode))
-                    er = repository.HasCondition(c.ReplacementCode.ToLower(), null);
 
+                if(c.Code==null)
+                continue;
+
+                var codeNamespace = c.CodeNamespace;
+                if (string.IsNullOrEmpty(codeNamespace))
+                    codeNamespace = "PRIME";
+                
+                var ec = repository.HasCondition(c.Code.ToLower(), codeNamespace);
+                bool? er = new bool?();
+                if (!string.IsNullOrEmpty(c.ReplacementCode)&& !string.IsNullOrEmpty(c.ReplacementCodeNamespace))
+                    er = repository.HasCondition(c.ReplacementCode.ToLower(), c.ReplacementCodeNamespace.ToLower());
+
+
+              
 
                 if (c.Option == TreatmentAdmission.Add && ec.HasValue && ec.Value)
                     continue;
@@ -54,59 +223,20 @@ namespace PRIME.Core.DSS.Treatment
                     ((ec.HasValue && ec.Value) || (!er.HasValue || !er.Value)))
                     continue;
 
-                List<TreatmentFactor> factors = new List<TreatmentFactor>();
-                List<NaiveVarInstance> vInputs = new List<NaiveVarInstance>();
-
-                foreach (var v in c.Variables)
+                if (c.NaiveModel != null)
                 {
-                    var b = repository.HasCondition(v.Code.ToLower(), null);
-
-                    if (b.HasValue)
-                    {
-                        if (v.Weight > 0.5)
-                        {
-                            factors.Add(new TreatmentFactor()
-                            {
-                                Effect = b.Value ? TreatmentFactorEffect.Positive : TreatmentFactorEffect.Negative,
-                                Name = v.Name
-                            });
-                        }
-                        else
-                        {
-                            factors.Add(new TreatmentFactor()
-                            {
-                                Effect = b.Value ? TreatmentFactorEffect.Negative : TreatmentFactorEffect.Positive,
-                                Name = v.Name
-                            });
-                        }
-
-                        vInputs.Add(new NaiveVarInstance() {Code = v.Code.ToLower(), Name = v.Name, Present = b.Value});
-                    }
-                    else
-                    {
-                        factors.Add(new TreatmentFactor() {Effect = TreatmentFactorEffect.Undetermined, Name = v.Name});
-                    }
+                    options.AddRange(GetTreatmentNaiveOptions(repository,c,c.NaiveModel));
                 }
 
-
-                var p = c.GetOutput(vInputs);
-
-                if (p > 0.1)
+                if (c.RuleModel != null)
                 {
-                    options.Add(new TreatmentOption()
-                    {
-                        Name = c.Name,
-                        ReplacementCode = c.ReplacementCode,
-                        Code = c.Code.ToLower(),
-                        Option = c.Option,
-                        Probability = p,
-                        Factors = factors,
-                        Summary = c.Summary
-                    });
+                    options.AddRange(GetTreatmentRuleOptions(repository, c, c.RuleModel));
                 }
             }
 
             return options;
         }
+
+      
     }
 }

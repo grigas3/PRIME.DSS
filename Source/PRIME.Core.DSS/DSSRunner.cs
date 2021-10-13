@@ -245,7 +245,7 @@ namespace PRIME.Core.DSS
                 try
                 {
                     //Get Aggregated observation
-                    var aggrObservation = await _aggregator.Run(patientId, code,
+                    var aggrObservation = await _aggregator.Run(patientId, code,null,
                         DateTime.Now.AddDays(-config.AggregationPeriodDays));
 
                     //Find Corresponding observation in config

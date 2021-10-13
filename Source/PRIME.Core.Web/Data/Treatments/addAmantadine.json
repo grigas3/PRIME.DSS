@@ -7,13 +7,14 @@
   "Description":"If dyskinesia is not adequately managed by modifying existing therapy, consider amantadine",
 
   "Link": "https://www.nice.org.uk/guidance/ng71/resources/parkinsons-disease-in-adults-pdf-1837629189061",
-  "Variables": [  
-   
-    {
-      "Name": "Patient with dyskinesia",
-      "Code": "DYSKINESIA",
-      "Weight": 0.9,
-      "Prior": 0.2
-    }
-  ]
+  "NaiveModel": {
+    "Variables": [
+      {
+        "Name": "Patient with dyskinesia",
+        "Code": "DYSKINESIA",
+        "Weight": 0.9,
+        "Prior": 0.2
+      }
+    ]
+  }
 }

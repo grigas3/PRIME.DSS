@@ -2,6 +2,7 @@
 using System.IO;
 using Newtonsoft.Json;
 using PRIME.Core.Common.Interfaces;
+using PRIME.Core.DSS.Fuzzy;
 
 namespace PRIME.Core.DSS.Treatment
 {
@@ -29,6 +30,15 @@ namespace PRIME.Core.DSS.Treatment
         }
 
 
+        /// <summary>
+        /// Add Treatment Classifier
+        /// </summary>
+        /// <param name="classifier"></param>
+        public void Add(ConditionClassifier classifier)
+        {
+            _conditionClassifiers.Add(classifier);
+
+        }
 
         /// <summary>
         /// Get Condition Options
@@ -41,33 +51,21 @@ namespace PRIME.Core.DSS.Treatment
             List<Condition> options = new List<Condition>();
             foreach (var c in _conditionClassifiers)
             {
-                List<NaiveVarInstance> vInputs = new List<NaiveVarInstance>();
 
-                foreach (var v in c.Variables)
+                if (c.Variables == null) continue;
+
+
+                if (c.NaiveModel != null)
                 {
+                    options.AddRange(GetConditionsNaive(repository, c, c.NaiveModel));
+                }
 
-                        var b = repository.HasCondition(v.Code.ToLower(),null);
-
-                        if (b.HasValue)
-                            vInputs.Add(new NaiveVarInstance()
-                            {
-                                Code = v.Code.ToLower(),
-                                Name = v.Name,
-                                Present = b.Value
-                            });
+                if (c.RuleModel != null)
+                {
+                    options.AddRange(GetConditionsRule(repository, c, c.RuleModel));
                 }
 
 
-                var p = c.GetOutput(vInputs);
-               
-                
-                    options.Add(new Condition()
-                    {
-                        Name = c.Name,
-                        Code = c.Code.ToLower(),
-                        Probability = p
-                    });
-                
             }
 
             return options;
@@ -85,57 +83,105 @@ namespace PRIME.Core.DSS.Treatment
             List<Condition> options = new List<Condition>();
             foreach (var c in _conditionClassifiers)
             {
-                List<NaiveVarInstance> vInputs = new List<NaiveVarInstance>();
+                if(c.Variables==null)continue;
+                
 
-                foreach (var v in c.Variables)
+                if (c.NaiveModel != null)
                 {
-                    if (treatment != null && treatment.Option == TreatmentAdmission.Add &&
-                        v.Code.ToLower() == treatment.Code.ToLower())
-                    {
-                        vInputs.Add(new NaiveVarInstance() {Code = v.Code.ToLower(), Name = v.Name, Present = true});
-                    }
-                    else if (treatment != null && treatment.Option == TreatmentAdmission.Remove &&
-                             v.Code.ToLower() == treatment.Code.ToLower())
-                    {
-                        vInputs.Add(new NaiveVarInstance() {Code = v.Code.ToLower(), Name = v.Name, Present = false});
-                    }
-                    else if (treatment != null && treatment.Option == TreatmentAdmission.Replace &&
-                             v.Code == treatment.ReplacementCode)
-                    {
-                        vInputs.Add(new NaiveVarInstance()
-                            {Code = treatment.ReplacementCode, Name = v.Name, Present = false});
-                    }
-                    else if (treatment != null && treatment.Option == TreatmentAdmission.Replace &&
-                             v.Code.ToLower() == treatment.Code.ToLower())
-                    {
-                        vInputs.Add(new NaiveVarInstance()
-                            {Code = treatment.Code.ToLower(), Name = v.Name, Present = true});
-                    }
-                    else
-                    {
-                        var b = repository.HasCondition(v.Code.ToLower(),null);
-
-                        if (b.HasValue)
-                            vInputs.Add(new NaiveVarInstance()
-                                {Code = v.Code.ToLower(), Name = v.Name, Present = b.Value});
-                    }
+                    options.AddRange(GetConditionsNaive(repository, c, c.NaiveModel));
                 }
 
-
-                var p = c.GetOutput(vInputs);
-                if (p > 0.1)
+                if (c.RuleModel != null)
                 {
-                    options.Add(new Condition()
-                    {
-                        Treatment = treatment,
-                        Name = c.Name,
-                        Code = c.Code.ToLower(),
-                        Probability = p
-                    });
+                    options.AddRange(GetConditionsRule(repository, c, c.RuleModel));
                 }
+
             }
 
             return options;
         }
+     
+
+        /// <summary>
+        /// Get Treatment Options based on Naive Bayes Classifier
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="classifier"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private static List<Condition> GetConditionsNaive(IConditionRepository repository, ConditionClassifier classifier, NaiveBayes model)
+        {
+            List<Condition> options = new List<Condition>();
+            List<NaiveVarInstance> vInputs = new List<NaiveVarInstance>();
+            var p = model.GetOutput(vInputs);
+            foreach (var v in model.Variables)
+            {
+              
+                var    codeNameSpace = "PRIME";
+                var b = repository.HasCondition(v.Code.ToLower(), codeNameSpace);
+
+                if (b.HasValue)
+                {
+                    vInputs.Add(new NaiveVarInstance() { Code = v.Code.ToLower(), Name = v.Name, Present = b.Value });
+                }
+            }
+            if (p > 0.1)
+            {
+                options.Add(new Condition()
+                {
+                    Name = classifier.Name,
+                    Code = classifier.Code.ToLower(),
+                    Value = p,
+                 
+                });
+            }
+
+            return options;
+        }
+
+        /// <summary>
+        /// Get Treatment Options based on Rules
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="classifier"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private static List<Condition> GetConditionsRule(IConditionRepository repository, ConditionClassifier classifier, FuzzyCollection model)
+        {
+            List<Condition> options = new List<Condition>();
+            Dictionary<string, object> valueDictionary = new Dictionary<string, object>();
+            foreach (var v in model.Variables)
+            {
+
+                string codeNameSpace = v.CodeNameSpace;
+                if (v.CodeNameSpace == null)
+                    codeNameSpace = "PRIME";
+
+                var b = repository.GetCondition(v.Code, codeNameSpace);
+
+                if (b.HasValue)
+                {
+                    valueDictionary.Add(v.Code, b.Value);
+                }
+
+            }
+            var p = FuzzyEngine.GetInference(model, valueDictionary);
+
+
+
+            options.Add(new Condition()
+            {
+                Name = classifier.Name,
+                Code = classifier.Code.ToLower(),
+                Value = p.Result,
+
+            });
+
+
+
+            return options;
+
+        }
+
     }
 }

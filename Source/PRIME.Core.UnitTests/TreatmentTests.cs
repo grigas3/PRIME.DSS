@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PRIME.Core.Context.Entities;
 
 namespace PRIME.Core.UnitTests
 {
@@ -28,6 +29,12 @@ namespace PRIME.Core.UnitTests
         {
             _codes.Add(c);
         }
+
+        public Task Aggregate(string patientId, IAggregator aggregator, List<AggrModel> aggregators)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool? HasCondition(string code, string system)
         {
             return _codes.Where(e => e.Code==code).Select(e => e.Value).FirstOrDefault();
@@ -40,6 +47,27 @@ namespace PRIME.Core.UnitTests
         }
     
         public bool? HasCondition(string code, string system, Func<object, bool> convert)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double? GetCondition(string code, string system)
+        {
+            throw new NotImplementedException();
+        }
+        public void AddCondition(string oCode, string codeNamespace,double value=1.0)
+        {
+            _codes.Add(new DumyCondition() { Code = oCode, Value = value>0.0 });
+        }
+
+        public void RemoveCondition(string oCode, string codeNamespace)
+        {
+            var c = _codes.FirstOrDefault(e => e.Code == oCode);
+            if (c != null)
+                _codes.Remove(c);
+        }
+
+        public ConditionResult GetConditionRes(string code, string system)
         {
             throw new NotImplementedException();
         }
@@ -80,7 +108,7 @@ namespace PRIME.Core.UnitTests
 
 
             }
-            Assert.IsTrue(conditions.Any(e => e.Code == "IMPULSIVITY" && e.Probability > 0.1), "IMP Has low probability");
+            Assert.IsTrue(conditions.Any(e => e.Code == "IMPULSIVITY" && e.Value > 0.1), "IMP Has low probability");
 
         }
 
@@ -109,7 +137,7 @@ namespace PRIME.Core.UnitTests
 
 
          
-            Assert.IsTrue(conditions.Any(e => e.Code == "IMPULSIVITY" && e.Probability < 0.5));
+            Assert.IsTrue(conditions.Any(e => e.Code == "IMPULSIVITY" && e.Value < 0.5));
 
         }
 
@@ -137,7 +165,7 @@ namespace PRIME.Core.UnitTests
 
 
 
-            Assert.IsTrue(conditions.Any(e => e.Code == "IMPULSIVITY" && e.Probability > 0.5));
+            Assert.IsTrue(conditions.Any(e => e.Code == "IMPULSIVITY" && e.Value > 0.5));
 
         }
 
@@ -166,7 +194,7 @@ namespace PRIME.Core.UnitTests
 
 
 
-            Assert.IsTrue(conditions.Any(e => e.Code == "IMPULSIVITY" && e.Probability <0.1));
+            Assert.IsTrue(conditions.Any(e => e.Code == "IMPULSIVITY" && e.Value <0.1));
 
         }
 
@@ -199,7 +227,7 @@ namespace PRIME.Core.UnitTests
 
 
             }
-            Assert.IsTrue(conditions.Any(e => e.Code == "IMPULSIVITY" && e.Probability < 0.5));
+            Assert.IsTrue(conditions.Any(e => e.Code == "IMPULSIVITY" && e.Value < 0.5));
 
         }
 

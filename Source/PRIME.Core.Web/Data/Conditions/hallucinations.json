@@ -1,27 +1,27 @@
 {
-"Name":"Halucinations",
-"Code":"HALUCINATIONS",
-"CodeNamespace":"PRIME",
-
-  Variables: [
-    {
-      "Name": "Dopamines",
-      "Code": "DOPAMINE",
-      "Weight": 0.8,
-      "Prior": 0.5
-    },
-
-    {
-      "Name": "MAO",
-      "Code": "MAO",
-      "Weight": 0.6,
-      "Prior": 0.5
-    },
-    {
-      "Name": "COMT",
-      "Code": "COMT",
-      "Weight": 0.6,
-      "Prior": 0.5
+  "Name": "Halucinations",
+  "Code": "HALUCINATIONS",
+  "CodeNamespace": "PRIME",
+  "NaiveModel": {
+      "Variables": [
+        {
+          "Name": "Dopamines",
+          "Code": "DOPAMINE",
+          "Weight": 0.8,
+          "Prior": 0.5
+        },
+        {
+          "Name": "MAO",
+          "Code": "MAO",
+          "Weight": 0.6,
+          "Prior": 0.5
+        },
+        {
+          "Name": "COMT",
+          "Code": "COMT",
+          "Weight": 0.6,
+          "Prior": 0.5
+        }
+      ]
     }
-  ]
-}
+  }

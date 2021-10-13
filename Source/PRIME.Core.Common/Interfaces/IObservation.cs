@@ -7,20 +7,17 @@ namespace PRIME.Core.Common.Interfaces
     /// <summary>
     /// Basic interface with the minimum number of properties an Observation should have
     /// </summary>
-    public interface IObservation
+    public interface IObservation:ICondition
     {
         /// <summary>
-        /// Value
+        /// Code Name space
         /// </summary>
-        double Value { get; set; }
-        /// <summary>
-        /// Code
-        /// </summary>
-        string CodeId { get; set; }
-
+        string CodeNameSpace { get; set; }
         /// <summary>
         /// Timestamp
         /// </summary>
         long Timestamp { get; set; }
+
+        string Description { get; set; }
     }
 }

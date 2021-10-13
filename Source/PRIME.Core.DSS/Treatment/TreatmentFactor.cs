@@ -14,4 +14,17 @@
         /// </summary>
         public TreatmentFactorEffect Effect { get; set; }
     }
+
+
+    public class Precondition
+    {
+
+        public string Code { get; set; }
+        public string Name { get; set; }
+        /// <summary>
+        /// Presence
+        /// </summary>
+        public bool? Presence { get; set; }
+
+    }
 }

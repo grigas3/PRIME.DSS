@@ -1,9 +1,26 @@
-<h1>PRIME DSS web demo application</h1>
-<p>This is a test web site in ASP .NET Core in order to test DSS and Aggregation functionalities</p>
-<p>Technologies used to develop this site:</p>
-<ul>
-    <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-    <li><a href='https://angular.io/'>Angular</a> and <a href='http://www.typescriptlang.org/'>TypeScript</a> for client-side code</li>
-    <li><a href='https://webpack.github.io/'>Webpack</a> for building and bundling client-side resources</li>
-    <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-</ul>
+
+
+
+<div class="container">
+
+
+    <h1>Welcome to PRIME</h1>
+    <p>PRIME is a clinical decision support system, powered by FHIR and Smart on FHIR frameworks. PRIME allows to integrate existing EHR systems for getting timely clinical guideline based recommendations </p>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+
+
+        <div *ngFor="let info of navInfo" class="feature col">
+            <div class="feature-icon bg-primary bg-gradient">
+                <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
+            </div>
+            <h2>{{info.title}}</h2>
+            <p>{{info.description}}</p>
+            <a href="#" class="icon-link" [routerLink]="info.url">
+                Go
+                <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"></use></svg>
+            </a>
+        </div>
+
+
+    </div>
+</div>

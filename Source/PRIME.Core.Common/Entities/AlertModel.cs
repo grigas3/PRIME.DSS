@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PRIME.Core.Web.Entities
+namespace PRIME.Core.Context.Entities
 {
     /// <summary>
     /// Alert Model

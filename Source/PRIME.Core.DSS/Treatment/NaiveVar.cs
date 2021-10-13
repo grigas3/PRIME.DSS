@@ -1,10 +1,14 @@
-﻿namespace PRIME.Core.DSS.Treatment
+﻿using PRIME.Core.Common.Interfaces;
+
+namespace PRIME.Core.DSS.Treatment
 {
     /// <summary>
     /// Naive Bayes Classifier Variable
     /// </summary>
-    public class NaiveVar
+    public class NaiveVar:IVariable
     {
+        public string CodeNameSpace { get; }
+
         /// <summary>
         /// Variable Name
         /// </summary>

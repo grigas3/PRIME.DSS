@@ -7,6 +7,7 @@ using PRIME.Core.Web.Extensions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using PRIME.Core.Context.Entities;
 
 namespace PRIME.Core.Web.Controllers
 {

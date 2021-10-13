@@ -1,0 +1,230 @@
+
+<div class="ui raised segment">
+    <div class="row">
+        <div class="col-lg-12  col-sm-12">
+            <div class="alert alert-info">
+
+                This an editor for a simple Rule Based DSS model.
+                The first level is the OR rules of the DSS. You can add a rule by typing a name and pressing "Add".
+                Then for each OR rule more than one variables can be considered as "AND" variables. There is also to taken the NOT of a specific variable by checking the
+                corresponding indication.
+                The codes used are the codes that Aggregations should output as new variables with a default namespace of PRIME.
+            </div>
+        </div>
+    </div>
+    <hr/>
+<div class="row">
+    <div class="col-lg-6  col-sm-12">
+        <div class="alert alert-info"> Model details</div>
+        <h3 class="ui header">Details</h3>
+        <form #f="ngForm" #values="ngForm"
+              class="ui form">
+            <div>
+                <div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input name="name" class="form-control" [(ngModel)]="treatment.name"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="code">Code</label>
+                        <input name="code" class="form-control" [(ngModel)]="treatment.code"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="codeNamespace">Code Namespace</label>
+                        <input name="codeNamespace" class="form-control" [(ngModel)]="treatment.codeNamespace"/>
+                    </div>
+
+
+                    
+                    <div class="form-group">
+                        <label for="summary">Recommendation Summary</label>
+                        <input name="summary" class="form-control" [(ngModel)]="treatment.summary"/>
+                    </div>
+
+                    <div class="form-group" *ngIf="treatment.treatmentSuggestion">
+                        <label for="replacementCode">Replacement Code</label>
+                        <input name="replacementCode" class="form-control" [(ngModel)]="treatment.replacementCode"/>
+                    </div>
+
+                    <div class="form-group" *ngIf="treatment.treatmentSuggestion">
+                        <label for="replacementCodeNamespace">Replacement Code Namespace</label>
+                        <input name="replacementCodeNamespace" class="form-control" [(ngModel)]="treatment.replacementCodeNamespace"/>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+
+        </form>
+        <div class="alert alert-info"> Preconditions for the specific suggestion</div>
+        <div class="form-group">
+            <div class="input-group">
+                <input [(ngModel)]="preconditionCode" type="text" class="form-control" /><button (click)="addPreCond()" class="btn btn-sm btn-info">Add Precondition</button>
+            </div>
+            <ul *ngFor="let dss of treatment.preconditions;let i=index">
+                <li>{{dss.code}} <button class="btn btn-danger btn-sm" (click)="removePreCond(dss)">Remove</button></li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="col-lg-6  col-sm-12">
+        <div>
+
+            <div class="alert alert-info">
+                IF
+                (GROUP A)     (A1 AND A2 AND A3) OR (B1 AND B2 AND B3)
+                AND
+                (GROUP B)     (A1 AND A2 AND A3) OR (B1 AND B2 AND B3) THEN RECOMMEND
+            </div>
+            
+            <h3 class="ui header">Groups</h3>
+            <hr />
+            <strong>Groups</strong>
+
+            
+
+            <div class="input-group">
+
+                <input name="name" class="form-control" [(ngModel)]="newfuzzyRule.name" />
+                <button (click)="addFuzzyRule()" class="btn btn-info">Add Group</button>
+            </div>
+            
+            <table class='table' *ngIf="fuzzyRules">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <!--<th>Fuzzy</th>-->
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let dss of fuzzyRules">
+                        <!--<td>{{dss.name}}</td>-->
+                        <td><input name="name" type="text" class="form-control" [(ngModel)]="dss.name" /></td>
+                        
+                        <!--<td><input name="fuzzy" type="checkbox" [(ngModel)]="dss.fuzzy" /></td>-->
+                        <td>
+                            <a class="btn  btn-sm btn-info" (click)="editFuzzyRule(dss)">Select</a>
+                            <a class="btn  btn-sm btn-danger" (click)="deleteFuzzyRule(dss)">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <h3 class="ui header">Rules</h3>
+            <hr />
+            <strong>OR Clauses</strong>
+
+            
+
+            <div class="input-group">
+
+                <input name="name" class="form-control" [(ngModel)]="newRule.name" />
+                <button (click)="addRule()" class="btn btn-info">Add OR clause</button>
+            </div>
+            <div>
+
+                <table class='table' *ngIf="dssRules">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dss of dssRules">
+
+                            <td><input name="name" type="text" class="form-control" [(ngModel)]="dss.name" /></td>
+                            <!--<td><input name="fuzzy" type="checkbox" [(ngModel)]="dss.fuzzy" /></td>-->
+                            <td>
+                                <a class="btn  btn-sm btn-info" (click)="editRule(dss)">Select</a>
+                                <a class="btn  btn-sm btn-danger" (click)="deleteRule(dss)">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div>
+
+                <strong>And Clauses for selected rule</strong>
+                <hr />
+
+                <strong>{{dssRule.name}}</strong>
+
+                <form #f="ngForm" #values="ngForm"
+                      (ngSubmit)="addAndRule()"
+                      class="ui form">
+                    <div>
+                        <div>
+
+
+
+                            <div class="input-group">
+                                <input name="description" class="form-control" [(ngModel)]="newAndRule.name" />
+                                <button type="submit" class="btn  btn-info">Add And Rule</button>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </form>
+
+
+                <table class='table' *ngIf="dssAndRules">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Code</th>
+
+                        <th>Invert</th>
+                        <th></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dss of dssAndRules">
+
+                            <td><input type="text" class="form-control" [(ngModel)]="dss.name" /></td>
+                            <td><input name="property" type="text" class="form-control" [(ngModel)]="dss.property" /></td>
+                            <td><input type="checkbox" [(ngModel)]="dss.not" /></td>
+                            <td>
+
+                                <a class="btn  btn-sm btn-danger" (click)="deleteAndRule(dss)">Delete</a>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+    <hr />
+    <div class="row">
+
+        <div class="col-lg-8 col-lg-offset-2 col-sm-12">
+            <div>
+
+                <a (click)="saveRule()" class="btn btn-lg btn-success">Save</a>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+

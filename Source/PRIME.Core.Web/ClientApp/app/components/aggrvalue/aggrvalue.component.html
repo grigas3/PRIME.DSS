@@ -11,7 +11,16 @@
 
 
                 <h5>Enter Patient Id</h5>
-                <input [(ngModel)]="patientId">
+                <input  [(ngModel)]="patientId">
+                
+                
+                <div>
+
+                    <h5>Enter FHIR Reource</h5>
+                    <textarea [(ngModel)]="bundle"></textarea>
+                </div>
+                
+                
 
 
                 <button type="button" (click)="execute()" class="btn btn-success btn-lg">Execute</button>

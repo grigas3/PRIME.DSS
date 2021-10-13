@@ -6,18 +6,20 @@
   "Summary": "Replace dopamine agonist with MAO",
   "Description": "Replace dopamine agonist with MAO",
   "Option": "Replace",
-  "Variables": [
-    {
-      "Name": "Fluctuations",
-      "Code": "FLUCTUATIONS",
-      "Weight": 0.9,
-      "Prior": 0.2
-    },
-    {
-      "Name": "Patient with dyskinesia",
-      "Code": "DYSKINESIA",
-      "Weight": 0.9,
-      "Prior": 0.2
-    }
-  ]
+  "NaiveModel": {
+    "Variables": [
+      {
+        "Name": "Fluctuations",
+        "Code": "FLUCTUATIONS",
+        "Weight": 0.9,
+        "Prior": 0.2
+      },
+      {
+        "Name": "Patient with dyskinesia",
+        "Code": "DYSKINESIA",
+        "Weight": 0.9,
+        "Prior": 0.2
+      }
+    ]
+  }
 }

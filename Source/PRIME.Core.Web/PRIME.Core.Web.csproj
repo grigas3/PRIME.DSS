@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
@@ -22,10 +22,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HangFire" Version="1.6.17" />
-    <PackageReference Include="HangFire.Core" Version="1.6.17" />
+    <PackageReference Include="HangFire" Version="1.7.25" />
+    <PackageReference Include="HangFire.Core" Version="1.7.25" />
     <PackageReference Include="Hangfire.MemoryStorage.Core" Version="1.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.8" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
   </ItemGroup>
@@ -40,6 +40,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\services\toast-service.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PRIME.Core.Aggregators\PRIME.Core.Aggregators.csproj" />
     <ProjectReference Include="..\PRIME.Core.Common\PRIME.Core.Common.csproj" />
     <ProjectReference Include="..\PRIME.Core.DSS\PRIME.Core.DSS.csproj" />
@@ -47,7 +51,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\Input\" />
     <Folder Include="Jobs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\services\toast-service.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\App\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

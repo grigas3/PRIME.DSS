@@ -5,8 +5,6 @@ using System.Text;
 
 namespace PRIME.Core.Common.Models.CDS
 {
-
-
 //    {
 //  "cards": [
 //    {
@@ -29,41 +27,40 @@ namespace PRIME.Core.Common.Models.CDS
 //}
 
 
-        public class CardSource
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-        [JsonProperty("url")]
-        public string Url { get; set; }
-    }
-
-    public class CardLink
-    {
-        [JsonProperty("label")]
-        public string Label { get; set; }
-        [JsonProperty("url")]
-
-        public string Url { get; set; }
-        [JsonProperty("type")]
-        public string UrlType { get; set; }
-
-    }
+    /// <summary>
+    /// Card Model
+    /// https://www.hl7.org/fhir/clinicalreasoning-cds-on-fhir.html
+    /// </summary>
     public class Card
     {
-
+        /// <summary>
+        /// Summary
+        /// </summary>
         [JsonProperty("summary")]
         public string Summary { get; set; }
+        /// <summary>
+        /// Indicator
+        /// </summary>
         [JsonProperty("indicator")]
         public string Indicator { get; set; }
-
+        /// <summary>
+        /// Detail
+        /// </summary>
         [JsonProperty("detail")]
         public string Detail { get; set; }
-
+        /// <summary>
+        /// Source
+        /// </summary>
         [JsonProperty("source")]
         public CardSource Source { get; set; }
-
+        /// <summary>
+        /// Links
+        /// </summary>
         [JsonProperty("links")]
         public List<CardLink> Links { get; set; }
-
+        /// <summary>
+        /// Code
+        /// </summary>
+        public string Code { get; set; }
     }
 }

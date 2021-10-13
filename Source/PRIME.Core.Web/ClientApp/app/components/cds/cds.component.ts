@@ -15,36 +15,63 @@ export class CDSComponent implements OnInit {
   
     private httpClient: Http;
     private baseUrl: string;
+    private dssId: string;
   
     constructor(private route: ActivatedRoute,http: Http, @Inject('BASE_URL') baseUrl: string) {
 
 
         this.baseUrl = baseUrl;
         this.httpClient = http;
-       
-       
+        
+
+
     }
 
     ngOnInit() {
 
+      
+            console.log('init');
+            this.route.params.subscribe(params => {
+                console.log(params.id);
+                this.dssId = params.id;
+            });
 
-        var url = this.baseUrl + 'api/v1/cds/conditions/med';
-
-
-
-        this.httpClient.get(url).subscribe(result => {
-            console.log(result.json());
-            this.meds = result.json() as CDSCondition[];
-
-        }, error => console.error(error));
-        var url = this.baseUrl + 'api/v1/cds/conditions/pd';
+        console.log(this.dssId);
 
 
-        this.httpClient.get(url).subscribe(result => {
-            console.log(result.json());
-            this.pdConditions = result.json() as CDSCondition[];
+            if (this.dssId) {
 
-        }, error => console.error(error));
+                var url = this.baseUrl + 'api/v1/condition?id=' + this.dssId;
+
+                this.httpClient.get(url).subscribe(result => {
+                        console.log(result.json());
+                    this.pdConditions = result.json() as CDSCondition[];
+
+                    },
+                    error => console.error(error));
+
+            } else {
+
+
+                var url = this.baseUrl + 'api/v1/condition/med';
+
+
+                this.httpClient.get(url).subscribe(result => {
+                        console.log(result.json());
+                        this.meds = result.json() as CDSCondition[];
+
+                    },
+                    error => console.error(error));
+                var url = this.baseUrl + 'api/v1/condition/pd';
+
+
+                this.httpClient.get(url).subscribe(result => {
+                        console.log(result.json());
+                        this.pdConditions = result.json() as CDSCondition[];
+
+                    },
+                    error => console.error(error));
+            }
 
 
     }
@@ -55,6 +82,7 @@ export class CDSComponent implements OnInit {
         var url = this.baseUrl + 'api/v1/cds';
 
         var model = {
+            id: this.dssId,
             input: JSON.stringify(form)
         };
       

@@ -1,17 +1,30 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using PRIME.Core.Common.Entities;
+using PRIME.Core.Web.Entities;
 
-namespace PRIME.Core.Web.Entities
+namespace PRIME.Core.Context.Entities
 {
     /// <summary>
     /// DSS model    
     /// </summary>
-    public class DSSModel
+    public class DSSModel:BaseEntity
     {
+        #region CDS Client
         /// <summary>
-        /// DSS ID
+        /// CDS Client Id
         /// </summary>
-        public int Id { get; set; }
+        public int? CDSClientId { get; set; }
+
+
+        /// <summary>
+        /// CDS Client
+        /// </summary>
+        [JsonIgnore]
+        public virtual CDSClient CDSClient { get; set; }
+        #endregion
+
 
         /// <summary>
         /// DSS Name
@@ -36,37 +49,27 @@ namespace PRIME.Core.Web.Entities
         /// </summary>
         public string Config { get; set; }
 
-
         /// <summary>
-        /// Created By
+        /// Data to consider in the model
         /// </summary>
-        [StringLength(100)]
-        public string CreatedBy { get; set; }
-
-
-
-        /// <summary>
-        /// Modified By
-        /// </summary>
-        [StringLength(100)]
-        public string ModifiedBy { get; set; }
-
-
-        /// <summary>
-        /// Created Date
-        /// </summary>
-        public DateTime CreatedDate { get; set; }
-
-        /// <summary>
-        /// Modified Date
-        /// </summary>
-        public DateTime ModifiedDate { get; set; }
-
+        public int AggregationPeriodDays { get; set; }
         /// <summary>
         /// Code
         /// </summary>
         public string Code { get;  set; }
 
+
+        /// <summary>
+        /// Treatment Suggestion
+        /// Otherwise is a model for a condition or implication
+        /// </summary>
+        public bool TreatmentSuggestion { get; set; }
+
+
+        public string CDSClientName
+        {
+            get { return CDSClient!=null? CDSClient.Name:"-"; }
+        }
         
 
     }

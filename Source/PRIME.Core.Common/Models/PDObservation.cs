@@ -28,6 +28,11 @@ namespace PRIME.Core.Models
         /// </summary>
         public double Value { get; set; }
 
+        /// <summary>
+        /// Name
+        /// </summary>
+        public string Name { get; set; }
+
 
         /// <summary>
         /// Value Weight
@@ -38,6 +43,15 @@ namespace PRIME.Core.Models
         /// Observation Category
         /// </summary>
         public string Category { get; set; }
+        /// <summary>
+        /// Description of variable input
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Code Namespace
+        /// </summary>
+        public string CodeNameSpace { get; set; }
     }
 
     /// <summary>
@@ -54,7 +68,7 @@ namespace PRIME.Core.Models
         /// <summary>
         /// Code
         /// </summary>
-        public string CodeId { get; set; }
+        public string Code { get; set; }
 
         /// <summary>
         /// Timestamp

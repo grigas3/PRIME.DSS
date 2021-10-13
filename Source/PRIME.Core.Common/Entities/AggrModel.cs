@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using PRIME.Core.Common.Entities;
 
-namespace PRIME.Core.Web.Entities
+namespace PRIME.Core.Context.Entities
 {
     /// <summary>
     /// Aggregation Model for Creating Meta-observations
     /// </summary>
-    public  class AggrModel
+    public  class AggrModel:BaseEntity
     {
-        /// <summary>
-        /// DSS ID
-        /// </summary>
-        public int Id { get; set; }
+        #region CDS Client
+        public int? CDSClientId { get; set; }
+
+        public virtual CDSClient CDSClient { get; set; }
+        #endregion
+      
 
         /// <summary>
         /// DSS Name
@@ -41,35 +44,15 @@ namespace PRIME.Core.Web.Entities
         public string Version { get; set; }
 
         /// <summary>
-        /// DSS Config in Json Format
+        /// Aggregation Model Config in Json Format
         /// </summary>
         public string Config { get; set; }
 
 
-        /// <summary>
-        /// Created By
-        /// </summary>
-        [StringLength(100)]
-        public string CreatedBy { get; set; }
-
-
-
-        /// <summary>
-        /// Modified By
-        /// </summary>
-        [StringLength(100)]
-        public string ModifiedBy { get; set; }
-
-
-        /// <summary>
-        /// Created Date
-        /// </summary>
-        public DateTime CreatedDate { get; set; }
-
-        /// <summary>
-        /// Modified Date
-        /// </summary>
-        public DateTime ModifiedDate { get; set; }
+        public string CDSClientName
+        {
+            get { return CDSClient != null ? CDSClient.Name : "-"; }
+        }
 
 
     }

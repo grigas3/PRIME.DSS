@@ -7,13 +7,14 @@
   "Description": "Consider modafinil to treat excessive daytime sleepiness in people with Parkinson's disease, only if a detailed sleep history has excluded reversible pharmacological and physical causes",
 
   "Link": "https://www.nice.org.uk/guidance/ng71/resources/parkinsons-disease-in-adults-pdf-1837629189061",
-  "Variables": [
-
-    {
-      "Name": "Patient with day time sleepiness",
-      "Code": "SLEEPINESS",
-      "Weight": 1,
-      "Prior": 0.2
-    }
-  ]
+  "NaiveModel": {
+    "Variables": [
+      {
+        "Name": "Patient with day time sleepiness",
+        "Code": "SLEEPINESS",
+        "Weight": 1,
+        "Prior": 0.2
+      }
+    ]
+  }
 }

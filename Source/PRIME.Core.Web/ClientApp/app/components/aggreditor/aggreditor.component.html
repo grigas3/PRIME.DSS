@@ -1,0 +1,245 @@
+
+<div class="ui raised segment">
+<h3 class="ui header">Aggregator for {{aggrConfig.name}}</h3>
+<div class="row">
+    <div class="col-lg-12 ">
+        <div class="alert alert-info">
+            Create a new aggregation
+            Name: name of the aggregation
+            Code: The target code which is used in rules and decision models
+            Threshold: Threshold of the value to be aggregated.
+            Variables: The target output is a linear model of input variables Y=A x X+B. The y variables is the one that is thresholded and the meta aggregation is applied
+        </div>
+    </div>
+</div>
+
+<hr/>
+
+
+<div class="row">
+
+
+    <div class="col-lg-12 ">
+     
+
+        <form #f="ngForm" #values="ngForm"
+              class="ui form">
+
+            <div>
+                <div class="form-group">
+
+                    <label for="name">Name</label>
+
+                    <input name="name" class="form-control" [(ngModel)]="aggrConfig.name" />
+                </div>
+
+                <div class="form-group">
+
+                    <label for="outputCode">Output Code</label>
+
+                    <input name="outputCode" class="form-control" [(ngModel)]="aggrConfig.outputCode" />
+                </div>
+                
+                
+                <div class="form-group">
+
+                    <label for="code">Input Code</label>
+
+                    <input name="code" class="form-control" [(ngModel)]="aggrConfig.code" />
+                </div>
+
+                <div class="form-group">
+
+                    <label for="codeNamespace">Input CodeNamespace</label>
+
+                    <input name="codeNamespace" class="form-control" [(ngModel)]="aggrConfig.codeNamespace" />
+                </div>
+                
+                
+
+
+                <div class="form-group">
+
+                    <label for="min">Min</label>
+
+                    <input name="min" class="form-control" [(ngModel)]="aggrConfig.min" />
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label for="max">Max</label>
+
+                    <input name="max" class="form-control" [(ngModel)]="aggrConfig.max" />
+                </div>
+
+                <div class="form-group">
+
+                    <label for="version">Version</label>
+
+                    <input name="version" class="form-control" [(ngModel)]="aggrConfig.version" />
+                </div>
+                               <div class="form-group">
+
+                    <label for="threshold">Threshold</label>
+
+                    <input name="threshold" type="checkbox" [(ngModel)]="aggrConfig.threshold" />
+                </div>
+                <div class="form-group" *ngIf="aggrConfig.threshold">
+
+                    <label for="thresholdValue">Threshold Value</label>
+
+                    <input type="number" name="thresholdValue" class="form-control" [(ngModel)]="aggrConfig.thresholdValue" />
+                </div>
+
+                <div class="form-group">
+                    <label for="metaAggregationType">Aggregation Type (on y)</label>
+
+                    <select [(ngModel)]="aggrConfig.metaAggregationType" name="metaAggregationType" class="form-control">
+
+                        <option *ngFor="let c of aggrTypes" [value]="c.id">{{c.name}}</option>
+
+
+
+
+                    </select>
+
+                </div>
+
+                <div class="alert alert-info">
+                    If any other than "any" is used then aggregator can apply a sigmoid function to the output of the aggregation variable
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="metaScaleA">Sigmoid A</label>
+
+                    <input type="number" name="metaScaleA" class="form-control" [(ngModel)]="aggrConfig.metaScaleA" />
+                </div>
+                <div class="form-group">
+
+                    <label for="metaScaleB">Sigmoid B</label>
+
+                    <input type="number" name="metaScaleB" class="form-control" [(ngModel)]="aggrConfig.metaScaleB" />
+                </div>
+                
+                
+                <a target="_blank" href="https://www.wolframalpha.com/input/?i=plot+sigmoid%28{{aggrConfig.metaScaleA}}*%28x-{{aggrConfig.metaScaleB}}%29%29+from+{{aggrConfig.min}}+to+{{aggrConfig.max}}">Show Plot</a>
+            </div>
+
+
+        </form>
+
+
+
+    </div>
+
+
+    
+<!--<div class="col-lg-6">
+    TODO: sigmoid graph
+</div>-->
+   
+
+
+<!--<div class="col-lg-6">
+
+        <h3 class="ui header">Add Model Variables Rules for the selected rule</h3>
+
+
+
+        <div class="card">
+
+            <div class="card-header">
+                <strong>New Variable</strong>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+
+                    <label for="code">Code</label>
+
+                    <input name="code" class="form-control" [(ngModel)]="newVar.code"/>
+
+                </div>
+                <div class="form-group">
+
+                    <label for="source">Source</label>
+
+                    <input name="source" class="form-control" [(ngModel)]="newVar.source"/>
+
+                </div>
+                <div class="form-group">
+                    <label for="description">Weight (a)</label>
+                    <input name="description" class="form-control" [(ngModel)]="newVar.weight"/>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="min">Min</label>
+
+                    <input name="min" class="form-control" [(ngModel)]="newVar.min"/>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="max">Max</label>
+
+                    <input name="max" class="form-control" [(ngModel)]="newVar.max"/>
+
+                </div>
+
+            </div>
+            <button type="button" (click)="addVariable()" class="btn btn btn-info">Add New Variable</button>
+        </div>
+
+
+        <div style="margin-top:20px">
+   
+            <strong>Table of Variables</strong>
+            <table class='table' *ngIf="aggrVariables">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Source</th>
+                    <th>Weight</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th></th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let dss of aggrVariables;let i=index">
+
+                    <td><input type="text" class="form-control" [(ngModel)]="dss.code"/></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="dss.source"/></td>
+                    <td><input type="number" class="form-control" [(ngModel)]="dss.weight"/></td>
+                    <td><input type="min" class="form-control" [(ngModel)]="dss.min"/></td>
+                    <td><input type="max" class="form-control" [(ngModel)]="dss.max"/></td>
+
+                    <td> <button type="button" class="btn  btn-sm btn-danger" (click)="deleteVariable(i)">Remove</button> </td>
+
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>-->
+
+
+</div>
+
+
+<hr />
+
+    <div class="row">
+        <div class="col-sm-12">
+            <button type="button" (click)="saveAggr()" class="btn btn-lg btn-success">Save</button>
+        </div>
+    </div>
+</div>

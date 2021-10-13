@@ -7,43 +7,44 @@
   "Description": "Offer a choice of MAO-B inhibitors, as an adjunct to levodopa for people with Parkinson's disease who have developed dyskinesia or motor fluctuations despite optimal levodopa therapy, after discussing the person's individual clinical circumstances, for example, their Parkinson's disease symptoms, comorbidities and risks from polypharmacy, the person's individual lifestyle circumstances, preferences, needs and goals the potential benefits and harms of the specific drug.",
 
   "Link": "https://www.nice.org.uk/guidance/ng71/resources/parkinsons-disease-in-adults-pdf-1837629189061",
-  "Variables": [
-
-    {
-      "Name": "FLUCTUATIONS",
-      "Code": "FLUCTUATIONS",
-      "Weight": 0.8,
-      "Prior": 0.0
-    },
-    {
-      "Name": "DOPAMINE",
-      "Code": "DOPAMINE",
-      "Weight": 0,
-      "Prior": 0.0
-    },
-    {
-      "Name": "COMT",
-      "Code": "COMT",
-      "Weight": 0,
-      "Prior": 0.0
-    },
-    {
-      "Name": "MOTOR",
-      "Code": "MOTOR",
-      "Weight": 0.9,
-      "Prior": 0.0
-    },
-    {
-      "Name": "Fluctuations",
-      "Code": "FLUCTUATIONS",
-      "Weight": 0.9,
-      "Prior": 0.0
-    },
-    {
-      "Name": "Patient with dyskinesia",
-      "Code": "DYSKINESIA",
-      "Weight": 0.9,
-      "Prior": 0.0
-    }
-  ]
+  "NaiveModel": {
+    "Variables": [
+      {
+        "Name": "FLUCTUATIONS",
+        "Code": "FLUCTUATIONS",
+        "Weight": 0.8,
+        "Prior": 0.0
+      },
+      {
+        "Name": "DOPAMINE",
+        "Code": "DOPAMINE",
+        "Weight": 0,
+        "Prior": 0.0
+      },
+      {
+        "Name": "COMT",
+        "Code": "COMT",
+        "Weight": 0,
+        "Prior": 0.0
+      },
+      {
+        "Name": "MOTOR",
+        "Code": "MOTOR",
+        "Weight": 0.9,
+        "Prior": 0.0
+      },
+      {
+        "Name": "Fluctuations",
+        "Code": "FLUCTUATIONS",
+        "Weight": 0.9,
+        "Prior": 0.0
+      },
+      {
+        "Name": "Patient with dyskinesia",
+        "Code": "DYSKINESIA",
+        "Weight": 0.9,
+        "Prior": 0.0
+      }
+    ]
+  }
 }

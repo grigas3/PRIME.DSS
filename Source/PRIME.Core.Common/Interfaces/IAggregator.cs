@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using PRIME.Core.Context.Entities;
+using PRIME.Core.Models;
 
 namespace PRIME.Core.Common.Interfaces
 {
@@ -20,8 +22,13 @@ namespace PRIME.Core.Common.Interfaces
         /// <param name="aggregationType"></param>
         /// <param name="filterType"></param>
         /// <returns>List of observations</returns>
-        Task<IEnumerable<IObservation>> Run(string patientId, string code, DateTime? lastExecutionTime,string aggregationType= null, string filterType = null);
+        Task<IEnumerable<IObservation>> Run(string patientId, string code, string codeNamepace, DateTime? lastExecutionTime,string aggregationType= null, string filterType = null);
 
-    
+        Task<IEnumerable<IObservation>> Run(string patientId, string code,string codeNamespace, IEnumerable<PDObservation> rawObs, string config);
+
+        Task<IObservation> RunSingle(string patientId, string code, string codeNamespace, IEnumerable<PDObservation> rawObs, string config);
+
+
+
     }
 }

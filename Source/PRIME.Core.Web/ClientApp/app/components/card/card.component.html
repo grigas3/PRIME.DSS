@@ -1,0 +1,95 @@
+
+<div class="container">
+    <div class="row py-lg-5">
+        <div class="col-lg-12">
+            <h1 class="ui header"><span style="color:cornflowerblue">pd</span><span style="color:blueviolet">advanced</span> for {{clientName}}</h1>
+            <p>The CDSS is based on PRIME, a decision support system based on Fuzzy logic and RWD/EHR data integration. </p>
+        </div>
+        
+        <div class="alert alert-warning"  *ngIf="loading">Please wait while loading...</div>
+        <hr />
+    </div>
+    
+    
+        <div class="row "  *ngIf="!accessTokenReceived">
+            <div class="col-sm-12  col-lg-12">
+
+                <div>
+                    <div *ngIf="!loading">
+                        <div class="alert alert-danger" style="margin-top:20px">The use of the EHR data should be first authorized by the user</div>
+                        <button type="button" (click)="authorize()" class="btn btn-danger btn-lg">
+                            Authorize
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="accessTokenReceived&&inputVariablesReceived">
+
+            <div class="col-sm-12 col-lg-12">
+                <div class="alert alert-success">The CDSS inputs are obtained from {{clientName}}. You can modify the values and press "Get Recommendations" to get new recommendations.</div>
+                <button type="button" class="btn btn-success" (click)="evaluate()">Get Recommendations</button>
+            </div>
+            </div>
+            <div class="row" *ngIf="accessTokenReceived">
+                <div class="col-sm-12 col-lg-6">
+
+                    <div *ngIf="!inputVariablesReceived">
+                        <div class="alert alert-info">If you redirect from your EHR the ID should be already filled. Otherwise use the patient identifier on your FHIR resources</div>
+                        <div *ngIf="!hasLaunch">
+                            <h5>Find patient</h5>
+                            <form #f="ngForm" #values="ngForm"
+                                  class="ui form">
+                                <select (change)="changeValue($event.target.value)" [ngModel]="patientId " name="patientId" class="form-control">
+                                    <option *ngFor="let patient of patients" [value]="patient.id">{{patient.familyName}} {{patient.givenName}}</option>
+                                </select>
+                            </form>
+                        </div>
+
+
+                        <div *ngIf="hasLaunch">
+                            <h5>
+                                Patient with Id {{patientId}}
+                            </h5>
+                        </div>
+                    </div>
+                    <button *ngIf="!inputVariablesReceived" type="button" (click)="execute()" class="btn btn-success">Get Patient Data</button>
+
+                    <div *ngIf="inputVariablesReceived">
+                        <h2 class="ui header">Conditions</h2>
+
+
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-6" *ngFor="let dssVar of inputVariables">
+                                <div class="card" style="margin-top: 5px">
+                                    <div class="card-header">
+                                        {{dssVar.code}} <strong>{{dssVar.value}}</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <span>
+                                            <input type="range" class="form-control-range" min="0" max="1" step=".1" [(ngModel)]="dssVar.value" />
+
+                                        </span>
+                                        <div>
+                                            {{dssVar.description}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>``
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-lg-6" *ngIf="recommendationsReceived">
+                    <h2 class="ui header">Suggestions</h2>
+
+                    <div *ngFor="let card of cards" class="cdscard">
+                        <div class="cdscard-header">
+                            {{ card.summary }}
+                        </div>
+                        <div _ngcontent-c2 [innerHTML]="card.detail">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>

@@ -25,7 +25,7 @@ namespace PRIME.Core.DSS.Treatment
         public TreatmentAdmission Option { get; set; }
 
         /// <summary>
-        /// Probability
+        /// Value
         /// </summary>
         public double Probability { get; set; }
 
@@ -41,5 +41,14 @@ namespace PRIME.Core.DSS.Treatment
         /// Description
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Missing Variables
+        /// </summary>
+        public List<string> MissingVariables { get; set; }
+        /// <summary>
+        /// Preconditions
+        /// </summary>
+        public List<Precondition> Preconditions { get; set; }
     }
 }

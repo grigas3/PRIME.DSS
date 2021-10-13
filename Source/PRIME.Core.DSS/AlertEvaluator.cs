@@ -121,7 +121,7 @@ namespace PRIME.Core.DSS
             else if (alert.TargetValueSource.ToLower() == MetaObservationType)
             {
                 //Get Aggregated observation
-                var aggrObservation = await _aggregator.Run(patientId, alert.TargetValueCode,
+                var aggrObservation = await _aggregator.Run(patientId, alert.TargetValueCode, null,
                     DateTime.Now.AddDays(-alert.AggregationPeriodDays));
                 var value = aggrObservation.Select(e => e.Value).Average();
                 return ApplyFilter(alert, value);
