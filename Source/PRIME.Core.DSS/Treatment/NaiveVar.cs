@@ -1,4 +1,5 @@
-﻿using PRIME.Core.Common.Interfaces;
+﻿using System.Collections.Generic;
+using PRIME.Core.Common.Interfaces;
 
 namespace PRIME.Core.DSS.Treatment
 {
@@ -13,6 +14,9 @@ namespace PRIME.Core.DSS.Treatment
         /// Variable Name
         /// </summary>
         public string Name { get; set; }
+
+        public List<string> Values { get; }
+
         /// <summary>
         /// Variable Code
         /// </summary>

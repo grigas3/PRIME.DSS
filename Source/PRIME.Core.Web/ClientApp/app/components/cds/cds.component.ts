@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject  } from '@angular/core';
+import { ViewChild, Component, OnInit, Inject  } from '@angular/core';
 import { Http } from '@angular/http';
 import { ActivatedRoute } from '@angular/router';
 @Component({
@@ -16,17 +16,22 @@ export class CDSComponent implements OnInit {
     private httpClient: Http;
     private baseUrl: string;
     private dssId: string;
+    private dssOutputcode: string;
+    public results: ValidationResult[];
+    public report: ValidationReport;
+    public caseValidation:boolean;
   
     constructor(private route: ActivatedRoute,http: Http, @Inject('BASE_URL') baseUrl: string) {
 
 
         this.baseUrl = baseUrl;
         this.httpClient = http;
-        
-
+        this.results = [];
+        this.caseValidation = true;
+        this.dssOutputcode = "";
 
     }
-
+    @ViewChild("fileInput") fileInput: any;
     ngOnInit() {
 
       
@@ -47,32 +52,28 @@ export class CDSComponent implements OnInit {
                         console.log(result.json());
                     this.pdConditions = result.json() as CDSCondition[];
 
-                    },
-                    error => console.error(error));
 
-            } else {
+                    this.pdConditions.forEach(function(c) {
+                        if (c.values) {
+                            c.options = [];
+                           
+                            var count = 0;
+                            c.values.forEach(function(v) {
+                               
+                                c.options.push({ name: v, value: count } as CondOption);
+                                count++;
+                            });
 
+                        }
 
-                var url = this.baseUrl + 'api/v1/condition/med';
+                    });
 
-
-                this.httpClient.get(url).subscribe(result => {
-                        console.log(result.json());
-                        this.meds = result.json() as CDSCondition[];
-
-                    },
-                    error => console.error(error));
-                var url = this.baseUrl + 'api/v1/condition/pd';
-
-
-                this.httpClient.get(url).subscribe(result => {
-                        console.log(result.json());
-                        this.pdConditions = result.json() as CDSCondition[];
 
                     },
                     error => console.error(error));
+
             }
-
+            
 
     }
   
@@ -83,6 +84,7 @@ export class CDSComponent implements OnInit {
 
         var model = {
             id: this.dssId,
+            code: this.dssOutputcode,
             input: JSON.stringify(form)
         };
       
@@ -100,46 +102,87 @@ export class CDSComponent implements OnInit {
         
     }
 
+    exportTemplate(): void {
 
+        var url = this.baseUrl + 'api/v1/dssvalidate?id=' + this.dssId+'&code='+this.dssOutputcode;
+
+        window.location.href = url;
+      
+    }
+
+    
+
+    changeType(): void {
+        this.caseValidation = !this.caseValidation;
+
+    }
+    addFile(): void {
+        let fi = this.fileInput.nativeElement;
+        if (fi.files && fi.files[0]) {
+            let fileToUpload = fi.files[0];
+
+            if (fileToUpload) {
+                let input = new FormData();
+                input.append("file", fileToUpload);
+
+                this.httpClient
+                    .post("/api/v1/dssvalidate?id=" + this.dssId+'&code='+this.dssOutputcode, input).subscribe(result => {
+                        this.report = result.json() as ValidationReport;
+                        this.results = this.report.results;
+
+                    });
+                //this.uploadService.upload(fileToUpload)
+                //    .subscribe(res => {
+                //        console.log(res);
+                //    });
+            } else
+                console.log("FileToUpload was null or undefined.");
+        }
+    }
+    //downloadFile(data: Response) {
+    //    const blob = new Blob([data], { type: 'text/csv' });
+    //    const url = window.URL.createObjectURL(blob);
+    //    window.open(url);
+    //}
     getData(): void {
-        //var url = this.baseUrl + 'api/v1/dsseval/input/' + this.modelId+'?patientId='+this.patientId;
-        //var request = this.httpClient.get(url).subscribe(res => {
-        //    console.log(res);
-        //    var self = this;
-        //    var sourceInput = res.json() as DSSValue[];
-
-        //    var newInput = Object.assign(this.dssInput) as DSSValue[];
-
-        //    sourceInput.forEach(function (newi) {
-
-        //        var dssI = newInput.filter(function (item) {
-        //            return item.name == newi.name;
-        //        }).forEach(function (newitem) {
-
-        //            newitem.value = newi.value;                 
-        //        })
-                
-                
-        //    });
-        //    this.dssInput = newInput;
-
-        //},
-        //    err => {
-        //        console.log("Error occured");
-        //    }
-        //);
-
+       
 
     }
 
 }
 
 
+interface ValidationReport {
+    falsePositives: number;
+    truePositives: number;
+    falseNegatives: number;
+    trueNegatives: number;
+    results: ValidationResult[];
+}
+
+interface ValidationResult {
+    input: string;
+    expectedOutput: string;
+    actualOutput: string;
+    output: string;
+    valid: boolean;
+}
+
 interface CDSCondition {
     value: number;
     name: string;   
     code: string;
-   
+    values: string[];
+    options: CondOption[];
+
+}
+
+
+interface CondOption {
+    name: string;
+    value: number;
+    
+
 }
 
 

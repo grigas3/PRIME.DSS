@@ -38,11 +38,11 @@
                     <td>{{dss.cdsClientName}}</td>
                     <td>{{ dss.createdBy }}</td>
 
-                    <td>
+                    <td width="300px">
                         <a class="btn  btn-sm btn-success" (click)="edit(dss)">Edit</a>
                         <a class="btn  btn-sm btn-danger" (click)="delete(dss)">Delete</a>
-                        <a class="btn  btn-sm btn-info" [routerLink]="['/admin/cds',dss.id]">Test Form</a>
-                        <a class="btn  btn-sm btn-warning" [routerLink]="['/admin/dsseditor',dss.id]">Edit Model</a>
+                        <a class="btn  btn-sm btn-info" [routerLink]="['/admin/cds',dss.id]">Test</a>
+                        <a class="btn  btn-sm btn-warning" [routerLink]="['/admin/dsseditor',dss.id]">Model</a>
 
 
                     </td>
@@ -128,13 +128,25 @@
 
                             <input name="config" class="form-control" [(ngModel)]="newDSS.config" />
                         </div>
-
-
+                        
+                        <hr/>
+                        <div class="alert alert-info">
+                            For Dexi models please select a file (dex) to upload
+                        </div>
+                        <div >
+                            <form name="fileUploadForm" method="post" enctype="multipart/form-data">
+                          
+                                <input #fileInput type="file" title="Choose Dexi file to upload" accept=".dxi"/>
+                        
+                           
+                    
+                            </form>
+                        </div>
                     </div>
                 </div>
 
 
-
+                <hr/>
                 <button type="submit" class="btn btn-success btn-lg">Submit</button>
 
 

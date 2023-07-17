@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 using PRIME.Core.Common.Entities;
 using PRIME.Core.Web.Entities;
@@ -58,6 +59,11 @@ namespace PRIME.Core.Context.Entities
         /// </summary>
         public string Code { get;  set; }
 
+        /// <summary>
+        /// Used only for posting a file
+        /// </summary>
+        [NotMapped]
+        public string DexiFile { get; set; }
 
         /// <summary>
         /// Treatment Suggestion

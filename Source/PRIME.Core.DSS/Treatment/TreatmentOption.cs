@@ -50,5 +50,14 @@ namespace PRIME.Core.DSS.Treatment
         /// Preconditions
         /// </summary>
         public List<Precondition> Preconditions { get; set; }
+        /// <summary>
+        /// Source of DSS
+        /// </summary>
+        public string Source { get; set; }
+
+        /// <summary>
+        /// Outcome
+        /// </summary>
+        public string Outcome { get; set; }
     }
 }

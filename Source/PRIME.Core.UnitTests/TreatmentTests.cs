@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PRIME.Core.Context.Entities;
+using PRIME.Core.Services.FHIR;
 
 namespace PRIME.Core.UnitTests
 {
@@ -18,6 +19,15 @@ namespace PRIME.Core.UnitTests
         public string Code { get; set; }
         public bool? Value { get; set; }
 
+    }
+
+
+    public class DummyFHIRConditionRepository : BaseFhirConditionRepository
+    {
+        public override async Task Init(string id)
+        {
+            
+        }
     }
     public class DummyConditionRepository : IConditionRepository
     {
@@ -55,9 +65,10 @@ namespace PRIME.Core.UnitTests
         {
             throw new NotImplementedException();
         }
-        public void AddCondition(string oCode, string codeNamespace,double value=1.0)
+        public bool AddCondition(string oCode, string codeNamespace,double value=1.0)
         {
             _codes.Add(new DumyCondition() { Code = oCode, Value = value>0.0 });
+            return true;
         }
 
         public void RemoveCondition(string oCode, string codeNamespace)
@@ -68,6 +79,11 @@ namespace PRIME.Core.UnitTests
         }
 
         public ConditionResult GetConditionRes(string code, string system)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Dictionary<string, string> ToDict(IValueMapping mapping)
         {
             throw new NotImplementedException();
         }

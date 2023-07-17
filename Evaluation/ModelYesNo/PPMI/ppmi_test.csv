@@ -1,0 +1,9 @@
+NO;ID;OFFTIME;DYSINT;DYSTIME;BRAD;GAITS;FOG;HALLUC;BIS11;COGNITION;TREMOR;MOOD;NMSS1;STEPS;MedicationChange
+PRIME;PRIME;PRIME;PRIME;PRIME;PRIME;PRIME;PRIME;PRIME;PRIME;PRIME;PRIME;PRIME;PRIME;PRIME;PRIME
+0;3001;mild;mild;mild;mild;mild;mild;mild;mild;mild;mild;mild;severe;high;no_change
+1;3001;mild;mild;mild;mild;mild;mild;mild;mild;mild;moderate;mild;severe;high;no_change
+2;3001;mild;mild;mild;mild;mild;mild;mild;mild;mild;mild;mild;moderate;high;no_change
+3;3001;mild;mild;mild;moderate;mild;mild;mild;mild;mild;moderate;mild;severe;high;no_change
+4;3001;mild;mild;mild;mild;mild;mild;mild;mild;mild;moderate;mild;severe;high;no_change
+5;3001;mild;mild;mild;mild;mild;mild;mild;mild;mild;moderate;mild;severe;high;change
+6;3001;mild;mild;mild;mild;mild;mild;mild;mild;mild;moderate;mild;severe;high;no_change

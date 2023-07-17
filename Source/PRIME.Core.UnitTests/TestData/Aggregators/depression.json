@@ -1,0 +1,11 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Max",
+  "OutputCode": "depression",
+  "Code": "DEPRESSION",
+  "Name": "depression",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "Threshold": true,
+  "ThresholdValue": 1
+}

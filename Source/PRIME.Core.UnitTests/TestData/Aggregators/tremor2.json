@@ -1,0 +1,10 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "OutputCode": "on/off fluctuations",
+  "Code": "UPDRS_PARTII_2",
+  "Name": "on/off fluctuations",
+  "Version": "1.0",
+  "Threshold": true,
+  "ThresholdValue": 1
+}

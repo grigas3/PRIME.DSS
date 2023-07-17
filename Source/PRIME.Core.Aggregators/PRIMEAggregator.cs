@@ -56,7 +56,7 @@ namespace PRIME.Core.Aggregators
             this._logger = logger;
         }
 
-     
+
         /// <summary>
         /// Run Aggregation
         /// This method 
@@ -67,45 +67,83 @@ namespace PRIME.Core.Aggregators
         /// </summary>
         /// <param name="patientId">Patient Id</param>
         /// <param name="code">Meta observation Code</param>
-        /// <param name="lastExecutionTime"></param>
-        /// <param name="aggregationType">Overrides the default aggregation type</param>
-        /// <param name="filterType">Overrides the default filter type</param>
+        /// <param name="codeNamespace">Code Namespace</param>
+        /// <param name="rawObs"></param>
+        /// <param name="configStr"></param>
         /// <returns></returns>
-        public async Task<IObservation> RunSingle(string patientId, string code, string codeNamespace,
+        public async Task<IObservation> RunSingle(string patientId, string code, 
+            string codeNamespace,
             IEnumerable<PDObservation> rawObs, string configStr)
         {
             if (configStr == null) throw new ArgumentNullException(nameof(configStr));
 
 
-            var config = AggrConfig.FromString(configStr);
+            var config = AggrConfig.FromString(configStr);  //Load Aggregation Configuration
+            var r=await RunSingle(patientId, code, codeNamespace, rawObs, config);
+
+            return r;
+        }
+
+
+        /// <summary>
+        /// Run Aggregation
+        /// This method 
+        /// 1) loads the aggregation definition
+        /// 2) Fetch all required observations using the DataProxy with the SPECIFIC code and namespace
+        /// 3) Calls the PerformAggregation method to perform the aggregation and returns a new observation
+        /// 
+        /// </summary>
+        /// <param name="patientId">Patient Id</param>
+        /// <param name="code">Meta observation Code</param>
+        /// <param name="rawObs"></param>
+        /// <param name="config">Aggregation Configurations</param>
+        /// <returns></returns>
+        public async Task<IObservation> RunSingle(string patientId, 
+            string code,
+            string codeNamespace,
+            IEnumerable<PDObservation> rawObs,
+            AggrConfig config)
+        {
             List<PDObservation> observations = new List<PDObservation>();
-          //  foreach (var c in config.Variables)
-          //  {
-                try
-                {
-                    if (string.IsNullOrEmpty(config.Code))
+            try
+            {
+                if (string.IsNullOrEmpty(config.Code))
                     throw new ArgumentNullException("Code");
 
-                if (string.IsNullOrEmpty(config.CodeNameSpace))
-                    throw new ArgumentNullException("Config");
 
-                //Get Observations For patient
-                var ret = rawObs.Where((e =>
-                        e.Code.ToLower() == config.Code.ToLower() && e.CodeNameSpace.ToLower() == config.CodeNameSpace.ToLower()));
+                if (config.CodeNameSpace != null)
+                    codeNamespace = config.CodeNameSpace;
+                if (string.IsNullOrEmpty((codeNamespace)))
+                {
+                    var ret = rawObs.Where((e =>
+                        e.Code.ToLower() == config.Code.ToLower() ));
                     observations.AddRange(ret);
                 }
-                catch (Exception ex)
+                else
                 {
-                    _logger?.LogError(ex, "Error in aggregation");
+                    var ret = rawObs.Where((e =>
+                       e.Code!=null&&e.CodeNameSpace!=null&& e.Code.ToLower() == config.Code.ToLower() && e.CodeNameSpace.ToLower() == codeNamespace.ToLower())).ToList();
+                    observations.AddRange(ret);
+
                 }
-      //      }
+                    
+                //Get Observations For patient
 
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error in aggregation");
+                return null;
+            }
 
+            if (observations.Count == 0)
+                return null;
+            
             var metaObservation = PerformAggregation(config, patientId, observations);
+          
+            
             metaObservation.Code = config.OutputCode;
             metaObservation.CodeNameSpace = "PRIME";
-            
-
             return metaObservation;
         }
 

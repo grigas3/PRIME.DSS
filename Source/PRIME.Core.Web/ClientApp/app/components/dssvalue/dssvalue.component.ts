@@ -57,19 +57,7 @@ export class DSSValueComponent implements OnInit {
     execute(): void {
 
 
-        //var url = this.baseUrl + 'api/v1/dsseval';
-
-        //var model = { 'ModelId': this.modelId, 'Input': JSON.stringify(form) };
-      
-        //var request = this.httpClient.post(url, model).subscribe(
-        //    res => {
-        //        console.log(res);
-        //        this.dssOutput = res.json() as DSSOutputValue[];
-        //    },
-        //    err => {
-        //        console.log("Error occured");
-        //    }
-        //);
+     
         var url = this.baseUrl + 'api/v1/dsseval';
 
         var model = { 'patientId': this.patientId,  'id': this.modelId, 'bundleJson':this.bundleJson };
@@ -77,7 +65,6 @@ export class DSSValueComponent implements OnInit {
         var request = this.httpClient.post(url, model).subscribe(
             res => {
                 console.log(res);
-                //this.dssOutput = res.json() as DSSOutputValue[];
             },
             err => {
                 console.log("Error occured");

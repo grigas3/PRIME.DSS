@@ -1,17 +1,13 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using PRIME.Core.Common.Interfaces;
-using PRIME.Core.Context.Entities;
 using PRIME.Core.DSS.Fuzzy;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using PRIME.Core.Common.Models;
 
 namespace PRIME.Core.DSS.Treatment
 {
-    public abstract class BasedClassifierFactory
-    {
-
-    }
-
     /// <summary>
     /// 
     /// </summary>
@@ -26,7 +22,7 @@ namespace PRIME.Core.DSS.Treatment
         public void Load(string path)
         {
             var files = Directory.GetFiles(path, "*.json");
-
+            _treatmentClassifiers.Clear();
 
             foreach (var c in files)
             {
@@ -42,11 +38,55 @@ namespace PRIME.Core.DSS.Treatment
         /// <param name="classifier"></param>
         public void Add(TreatmentClassifier classifier)
         {
+            if(_treatmentClassifiers.All(e => e.Code != classifier.Code))
             _treatmentClassifiers.Add(classifier);
 
         }
 
+        private static List<TreatmentOption> GetTreatmentDexiOptions(
+            IConditionRepository repository,
+            TreatmentClassifier classifier,
+            DSSConfig deximodel)
 
+        {
+            List<TreatmentOption> options = new List<TreatmentOption>();
+            var values = repository.ToDict(deximodel);
+            var dssValues=DSSRunner.Run(deximodel, values);
+            foreach (var c in dssValues)
+            {
+                if (c.Code == classifier.Code&&c.Value==deximodel.DexiOutputValue)
+                {
+                    options.Add(new TreatmentOption()
+                    {
+                        Name = classifier.Name,
+                        ReplacementCode = classifier.ReplacementCode,
+                        Code = classifier.Code.ToLower(),
+                        Option = classifier.Option,
+                        Probability = 1.0,
+                        Outcome = c.Value,
+                        Description = classifier.Description,
+                        Summary = classifier.Summary,
+                        Source = classifier.Source,
+                    });
+                }
+            }
+            return options;
+
+        }
+        private static IEnumerable<DSSValue> GetTreatmentDexiValues(
+            IConditionRepository repository,
+            TreatmentClassifier classifier,
+            DSSConfig deximodel)
+
+        {
+            
+            List<TreatmentOption> options = new List<TreatmentOption>();
+            var values = repository.ToDict(deximodel);
+            var dssValues = DSSRunner.Run(deximodel, values);
+            return dssValues;
+          
+
+        }
         /// <summary>
         /// Get Treatment Options based on Naive Bayes Classifier
         /// </summary>
@@ -54,7 +94,9 @@ namespace PRIME.Core.DSS.Treatment
         /// <param name="classifier"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        private static List<TreatmentOption> GetTreatmentNaiveOptions(IConditionRepository repository,TreatmentClassifier classifier,NaiveBayes model)
+        private static List<TreatmentOption> GetTreatmentNaiveOptions(IConditionRepository repository,
+            TreatmentClassifier classifier,
+            NaiveBayes model)
         {
             List<TreatmentOption> options = new List<TreatmentOption>();
             List<TreatmentFactor> factors = new List<TreatmentFactor>();
@@ -105,7 +147,8 @@ namespace PRIME.Core.DSS.Treatment
                     Option = classifier.Option,
                     Probability = p,
                     Factors = factors,
-                    Summary = classifier.Summary
+                    Summary = classifier.Summary,
+                    Source=classifier.Source,
                 });
             }
 
@@ -228,6 +271,12 @@ namespace PRIME.Core.DSS.Treatment
                     options.AddRange(GetTreatmentNaiveOptions(repository,c,c.NaiveModel));
                 }
 
+                if (c.DexiModel!=null)
+                {
+
+                    options.AddRange(GetTreatmentDexiOptions(repository, c, c.DexiModel));
+                }
+
                 if (c.RuleModel != null)
                 {
                     options.AddRange(GetTreatmentRuleOptions(repository, c, c.RuleModel));
@@ -237,6 +286,82 @@ namespace PRIME.Core.DSS.Treatment
             return options;
         }
 
-      
+
+        /// <summary>
+        /// Get Options
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <returns></returns>
+        public List<DSSValue> GetTreatmentOutputValues(IConditionRepository repository)
+        {
+            List<DSSValue> options = new List<DSSValue>();
+            foreach (var c in _treatmentClassifiers)
+            {
+
+                if (c.Code == null)
+                    continue;
+
+                var codeNamespace = c.CodeNamespace;
+                if (string.IsNullOrEmpty(codeNamespace))
+                    codeNamespace = "PRIME";
+
+                var ec = repository.HasCondition(c.Code.ToLower(), codeNamespace);
+                bool? er = new bool?();
+                if (!string.IsNullOrEmpty(c.ReplacementCode) && !string.IsNullOrEmpty(c.ReplacementCodeNamespace))
+                    er = repository.HasCondition(c.ReplacementCode.ToLower(), c.ReplacementCodeNamespace.ToLower());
+
+
+
+
+                if (c.Option == TreatmentAdmission.Add && ec.HasValue && ec.Value)
+                    continue;
+
+                if (c.Option == TreatmentAdmission.Remove && (!ec.HasValue || !ec.Value))
+                    continue;
+
+                if (c.Option == TreatmentAdmission.Replace &&
+                    ((ec.HasValue && ec.Value) || (!er.HasValue || !er.Value)))
+                    continue;
+
+                if (c.NaiveModel != null)
+                {
+                   
+                }
+
+                if (c.DexiModel != null)
+                {
+
+                    options.AddRange(GetTreatmentDexiValues(repository, c, c.DexiModel));
+                }
+
+                if (c.RuleModel != null)
+                {
+                    
+                }
+            }
+
+            return options;
+        }
+
+
+
+
+        public int GetTreatmentVariablesEvaluationCount(IConditionRepository repository)
+        {
+            int count = 0;
+            foreach (var c in _treatmentClassifiers)
+            {
+                if (c.Code == null)
+                    continue;
+
+                if (c.DexiModel != null)
+                {
+                    var keys = repository.ToDict(c.DexiModel).Keys;
+                    count += keys.Count;
+                }
+            }
+
+            return count;
+        }
     }
 }

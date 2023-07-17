@@ -106,7 +106,9 @@ namespace PRIME.Core.Web.Controllers
                 {
                     Code = e.Code,
                     Name = e.Name,
-                    Category = model.Name
+                    Category = model.Name,
+                    Values=e.Values,
+
                 });
 
                 return Ok(variables);

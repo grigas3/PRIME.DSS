@@ -2,7 +2,7 @@
 <div class="ui raised segment">
 
     <div class="row">
-        <div class="col-sm-12 col-lg-12">
+        <div class="col-sm-12 col-lg-6">
             <div *ngIf="!aggrConfig">
                 Loading...
             </div>
@@ -11,13 +11,13 @@
 
 
                 <h5>Enter Patient Id</h5>
-                <input  [(ngModel)]="patientId">
+                <input class="form-control"   [(ngModel)]="patientId">
                 
                 
                 <div>
 
-                    <h5>Enter FHIR Reource</h5>
-                    <textarea [(ngModel)]="bundle"></textarea>
+                    <h5>Enter FHIR Resource</h5>
+                    <textarea class="form-control" [(ngModel)]="bundle"></textarea>
                 </div>
                 
                 
@@ -29,7 +29,57 @@
 
 
         </div>
-    </div>
+    
+    
+        <div class="col-lg-6 col-sm-12">
+            <div class="alert alert-info">
+                Validate the Aggregation using an input csv file
+                The CSV should have a header with the input variables and one with the Output code
+                The inputs should have the values to be tested and the output the expected output
+            </div>
+            <form name="fileUploadForm" method="post" enctype="multipart/form-data">
+                <div class="col-md-6">
+                    <input #fileInput type="file" title="Choose CSV file to upload" accept=".csv"/>
+                    <hr/>
+                    <button (click)="addFile()" class="btn btn-success">Add</button>
+                </div>
+            </form>
+
+            <div *ngIf="results">
+                <div>
+
+                    <table class="tab-content table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Input</th>
+                            <th>Results</th>
+                            <th>Expected Res</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let aggr of results">
+                            <td>{{aggr.index}}</td>
+                            <td>{{aggr.input}}</td>
+                            <td>{{aggr.expectedOutput}}</td>
+                            <td>{{aggr.output}}</td>
+                            <td>
+
+                                <i class="f fa-check green" *ngIf="aggr.valid"></i>
+                                <i class="f fa-minus red" *ngIf="!aggr.valid"></i>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </div>
     <div class="row">
 
         <div class="col-sm-12 col-lg-12">

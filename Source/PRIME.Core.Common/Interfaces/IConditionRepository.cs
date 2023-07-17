@@ -75,7 +75,7 @@ namespace PRIME.Core.Common.Interfaces
         /// </summary>
         /// <param name="oCode"></param>
         /// <param name=""></param>
-        void AddCondition(string oCode, string codeNamespace,double value=1.0);
+        bool AddCondition(string oCode, string codeNamespace,double value=1.0);
 
         /// <summary>
         /// Remove Condition
@@ -86,5 +86,14 @@ namespace PRIME.Core.Common.Interfaces
 
 
         ConditionResult GetConditionRes(string code, string system);
+        Dictionary<string, string> ToDict(IValueMapping mapping);
+        
+    }
+
+
+    public interface IValueMapping
+    {
+        int GetValue(string variable,double v);
+
     }
 }

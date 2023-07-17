@@ -1,0 +1,12 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Max",
+  "OutputCode": "impulsivity",
+  "Code": "UPDRS_I_5",
+  "Name": "impulsivity",
+  "CodeNameSpace": "www.netmed360.com",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "Threshold": true,
+  "ThresholdValue": 1
+}

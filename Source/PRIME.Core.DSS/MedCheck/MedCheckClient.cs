@@ -3,13 +3,113 @@ using PRIME.Core.Common.Models;
 using PRIME.Core.MedCheck;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace PRIME.Core.DSS.MedCheck
 {
+
+   
+    public class ProteinCheckService : IProteinCheckService
+    {
+        private const string BaseUrl = "http://string-db.org/api/";
+        private const string Url = "http://string-db.org/api/tsv-no-header/interactorsList";
+        private const string MatchUrl = "http://string-db.org/api/json/resolve?identifier=ADD&species=9606";
+
+        private List<StichInteractionItem> ParseFile(string response)
+        {
+            var ret = new List<StichInteractionItem>();
+
+            var lines = response.Split('\n');
+            foreach (var c in lines)
+            {
+                if(string.IsNullOrEmpty((c)))
+                    continue;
+                
+                var vals=c.Split(('\t'));
+
+                if(vals.Length<5)
+                    continue;
+                
+                ret.Add(new StichInteractionItem()
+                {
+                    idA = vals[0],
+                    idB=vals[1],
+                    nameA=vals[2],
+                    nameB=vals[3],
+                    score = vals[5]
+
+                });
+
+
+            }
+
+            return ret;
+
+        }
+
+        public string GetMatchUrl(string term)
+        {
+            return $"json/resolve?identifier={term}&species=9606";
+        }
+
+        public string GetInteractorsUrl(string term)
+        {
+            return $"tsv-no-header/interactorsList?identifier={term}&required_score=800&limit=20";
+        }
+
+
+        public async Task<List<StichMatchItem>> MatchItems(string term)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(BaseUrl);
+            var url = GetMatchUrl(term);
+
+
+            var response = await client.GetAsync(url);
+
+            List<Core.MedCheck.Gene.Interaction> geneInteractions = new List<Core.MedCheck.Gene.Interaction>();
+            if (response.IsSuccessStatusCode)
+            {
+                var s = await response.Content.ReadAsStringAsync();
+                var ret=JsonConvert.DeserializeObject<List<StichMatchItem>>(s);
+                return ret;
+                
+            }
+
+            return null;
+
+        }
+
+        public async Task<List<StichInteractionItem>> Check(List<string> identifiers)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(BaseUrl);
+            var url = GetInteractorsUrl(string.Join("%0d", identifiers));//+ "&required_score=800&limit=20";
+
+        
+            var response = await client.GetAsync(url);
+
+            List<Core.MedCheck.Gene.Interaction> geneInteractions = new List<Core.MedCheck.Gene.Interaction>();
+            if (response.IsSuccessStatusCode)
+            {
+                var s = await response.Content.ReadAsStringAsync();
+                var ret=ParseFile(s);
+                return ret;
+                
+            }
+
+            return null;
+
+        }
+
+    }
+
+
     /// <summary>
     /// Medication Check Service
     /// </summary>
@@ -115,12 +215,35 @@ namespace PRIME.Core.DSS.MedCheck
             //Find Medication RX
             foreach (var d in drugList)
             {
-                var di = await _drugRepository.GetRXCUI(d);
-
-                if (di == null)
-                    throw new HttpRequestException("Drug is not present in our repository");
-                drugItems.Add(di);
+                long d1 = 0;
+                if (long.TryParse(d,out d1))
+                {
+                    drugItems.Add(new DrugItem()
+                    {
+                        RXCUI = d1
+                    });
             }
+                else
+                {
+                    try
+                    {
+                        var di = await _drugRepository.GetRXCUI(d);
+                        drugItems.Add(di);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new HttpRequestException("Drug is not present in our repository");
+
+                }
+                }
+
+                //if (di == null)
+                  //  throw new HttpRequestException("Drug is not present in our repository");
+               
+            }
+
+            int ndrugItems=drugItems.Count;
+
             foreach (var c in drugItems)
             {
                 
@@ -140,7 +263,7 @@ namespace PRIME.Core.DSS.MedCheck
                     {
                         foreach (var ip in it.InteractionPair)
                         {
-                            if (ip.InteractionConcept.All(
+                            if (ndrugItems==1||ip.InteractionConcept.All(
                                 r => drugItems.Any(i => i.RXCUI == r.MinConceptItem.Rxcui)))
                             {
                                 interactionPairs.Add(ip);

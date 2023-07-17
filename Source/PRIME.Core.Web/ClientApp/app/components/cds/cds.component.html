@@ -1,60 +1,54 @@
 
-
-<div class="alert alert-warning">Demo of CDS use </div>
-<div class="ui raised segment">
-
-    <div class="row">
-        <div class="col-sm-6 col-lg-4">
-            
-            <div >
-                <h2 class="ui header">Treatment input </h2>
-
-              
-                <form #f="ngForm"
-                      (ngSubmit)="onSubmit(f.value)"
-                      class="ui form">
-
-                
-                    <div *ngIf="meds">
-                        <h3>Medications</h3>
-                        <div *ngFor="let med of meds">
-                            <div class="form-group">
-
-                                <label for="{{med.name}}">{{med.name}}</label>
+<div>
+    <button class="btn btn-lg btn-default" (click)="changeType()">Switch Case/File based validation</button>
+</div>
+<hr/>
 
 
+<div *ngIf="caseValidation">
+    <div class="alert alert-warning">Case based validation</div>
+    <div class="ui raised segment">
 
-                                <select id="{{med.code}}" name="{{med.code}}" [ngModel]="med.value" class="form-control">
-                                    <option value="" ng-reflect-ng-value="">Unknown</option>
-                                    <option value="True" ng-reflect-ng-value="True">True</option>
-                                    <option value="False" ng-reflect-ng-value="False">False</option>
+        <div class="row">
+            <div class="col-sm-6 col-lg-4">
 
-                                </select>
-
-                            </div>
+                <div>
+                    <h2 class="ui header">Treatment input </h2>
 
 
-                        </div>
-                        <hr />
-                        </div>
+                    <a class="btn  btn-sm btn-warning" [routerLink]="['/dsseval/',dssId]">Test with FHIR Resources</a>
+                    <form #f="ngForm"
+                          (ngSubmit)="onSubmit(f.value)"
+                          class="ui form">
+
+
+
 
                         <div *ngIf="pdConditions">
                             <h3>PD</h3>
                             <div *ngFor="let med of pdConditions">
                                 <div class="form-group">
 
-                                    <label for="{{med.name}}">{{med.name}}</label>
+                                    <label for="{{med.name}}">
+                                        {{med.name}}
+                                    </label>
 
-                                    
+
+                                    <input *ngIf="!med.options" class="form-control" id="{{med.code}}" name="{{med.code}}" [(ngModel)]="med.value" />
+
+                                    <!--<select *ngIf="!med.options" id="{{med.code}}" name="{{med.code}}" [ngModel]="med.value" class="form-control">
+                        <option value="" ng-reflect-ng-value="">Unknown</option>
+                        <option value="True" ng-reflect-ng-value="True">True</option>
+                        <option value="False" ng-reflect-ng-value="False">False</option>
+
+                    </select>-->
+
+                                    <select *ngIf="med.options" id="{{med.code}}" name="{{med.code}}" [ngModel]="med.value" class="form-control">
+                                        <option *ngFor="let c of med.options" [value]="c.value">{{c.name}}</option>
 
 
-                                    <select id="{{med.code}}" name="{{med.code}}" [ngModel]="med.value" class="form-control">
-                                        <option value="" ng-reflect-ng-value="">Unknown</option>
-                                        <option value="True" ng-reflect-ng-value="True">True</option>
-                                        <option value="False" ng-reflect-ng-value="False">False</option>
 
                                     </select>
-
                                 </div>
 
 
@@ -68,35 +62,137 @@
 
 
 
-</form>
-            </div>
-
-
-        </div>
-        <div class="col-sm-6 col-lg-8">
-
-            <h2 class="ui header">PRIME Suggestions</h2>
-            <div *ngIf="!cards">
-                Submit CDS to get Clinical Guidelines Cards
-            </div>
-
-
-            <div *ngFor="let card of cards" class="cdscard">
-              <div class="cdscard-header">                   
-                  {{ card.summary }}
+                    </form>
                 </div>
-              <div _ngcontent-c2 [innerHTML]="card.detail">
-                
-              </div>
 
 
             </div>
-        
+            <div class="col-sm-6 col-lg-8">
+
+                <h2 class="ui header">PRIME Suggestions</h2>
+                <div *ngIf="!cards">
+                    Submit CDS to get Clinical Guidelines Cards
+                </div>
+
+
+                <div *ngFor="let card of cards" class="cdscard">
+                    <div class="cdscard-header">
+                        {{ card.summary }}
+                    </div>
+                    <div _ngcontent-c2 [innerHTML]="card.detail">
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
 
         </div>
 
-        </div>
-   
-   
+
 
     </div>
+
+
+</div>
+
+
+
+
+<div *ngIf="!caseValidation">
+    <div class="alert alert-warning">File based validation</div>
+    <div class="ui raised segment">
+
+        <div class="row">
+            <div class="col-sm-12 col-lg-12">
+
+                <div class="alert alert-info">
+                    Validate the DSS using an input csv file
+                    The CSV should have 
+                    <ul>
+                        <li><b>one</b> header with the codes of input variables and the CDSS code</li>
+                        <li><b>one</b> header with the code namespaces of input variables and PRIME (or empty) for the CDSS Code</li>
+                        <li>A single line for each case</li>
+                    </ul></div>
+                <form name="fileUploadForm" method="post" enctype="multipart/form-data">
+                    <div>
+                        <input #fileInput type="file" title="Choose CSV file to upload" accept=".csv" />
+
+
+                    </div>
+
+                 
+                    <hr />
+
+                </form>
+                <hr />
+
+                <div>
+                    <div class="alert alert-info">Select specific DSS output to validate</div>
+                    <input type="text" [(ngModel)]="dssOutputcode" />
+                </div>  
+                <div>
+                    <button (click)="addFile()" class="btn btn-success btn-lg">Validate</button>
+                    
+                    <button (click)="exportTemplate()" class="btn btn-info btn-lg">Export Template</button>
+                </div>
+
+            </div>
+            
+            
+            <div *ngIf="report">
+                
+                <table class="table table-bordered">
+                    <tr><td><span>{{report.trueNegatives}}</span></td><td><span>{{report.falseNegatives}}</span></td></tr>
+                    <tr><td><span>{{report.falsePositives}}</span></td><td><span>{{report.truePositives}}</span></td></tr>
+                </table>
+                </div>
+                <div *ngIf="results">
+                    <div>
+
+                        <table class="tab-content table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Inputs</th>
+                                <th>Outputs</th>
+
+                                <th>Expected Res</th>
+                                <th>Actual Res</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let aggr of results">
+                                <td>{{aggr.index}}</td>
+                                <td>{{aggr.input}}</td>
+                                <td>{{aggr.output}}</td>
+                                <td>{{aggr.expectedOutput}}</td>
+                                <td>{{aggr.actualOutput}}</td>
+
+                                <td>
+
+                                    <i class="f fa-check green" *ngIf="aggr.valid"></i>
+                                    <i class="f fa-minus red" *ngIf="!aggr.valid"></i>
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+
+
+    </div>
+
+
+</div>

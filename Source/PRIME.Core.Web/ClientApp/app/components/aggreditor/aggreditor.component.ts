@@ -150,9 +150,9 @@ interface AggrConfig {
     id: string;
     name: string;
     code: string;
-    codeNamespace: string;
+    codeNameSpace: string;
     inputCode: string;
-    outputCode: string;
+    outputScale: string;
     description: string;
     version: string;
     metaScale: number;

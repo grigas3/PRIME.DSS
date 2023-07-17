@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Hl7.Fhir.Model;
 using Itenso.TimePeriod;
@@ -10,6 +11,11 @@ using Task = System.Threading.Tasks.Task;
 
 namespace PRIME.Core.Services.FHIR
 {
+
+    /// <summary>
+    /// Base FHIR Condition Repository.
+    /// Implements the basic methods of a <see cref="IConditionRepository">IConditionRepository</see>   
+    /// </summary>
     public abstract class BaseFhirConditionRepository : IConditionRepository
     {
         #region Readonly Properties
@@ -19,7 +25,60 @@ namespace PRIME.Core.Services.FHIR
         private readonly List<IObservation> _metaObservations = new List<IObservation>();
         #endregion
 
-  
+
+        /// <summary>
+        /// Map values to a dictionary
+        /// </summary>
+        /// <param name="mapping"></param>
+        /// <returns></returns>
+        public Dictionary<string, string> ToDict(IValueMapping mapping)
+        {
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+
+            #region Meta observations
+            foreach (var c in _metaObservations)
+            {
+                if(c.CodeNameSpace==null||c.CodeNameSpace.ToLower()!="prime")
+                    continue;
+                //If there is a mapping the use the mapping
+                if (mapping != null)
+                {
+                    dictionary.Add(c.Code, mapping.GetValue(c.Code,c.Value).ToString());
+                }
+                else
+                {
+                    //Otherwise set that category if value>0.5
+                    if (c.Value > 0.5)
+                        dictionary.Add(c.Code, c.Category);
+                }
+            }
+            #endregion
+
+            #region Raw observations
+
+            var observations = GetObservations();
+            foreach (var c in observations)
+            {
+                if (c.CodeNameSpace == null || c.CodeNameSpace.ToLower() != "prime")
+                    continue;
+                //If there is a mapping the use the mapping
+                if (mapping != null)
+                {
+                    dictionary.Add(c.Code, mapping.GetValue(c.Code, c.Value).ToString());
+                }
+                else
+                {
+                    //Otherwise set that category if value>0.5
+                    if (c.Value > 0.5)
+                        dictionary.Add(c.Code, c.Category);
+                }
+            }
+            #endregion
+
+
+            return dictionary;
+        }
+
 
         private static bool MatchCode(CodeableConcept concept, string code, string system)
         {
@@ -29,15 +88,16 @@ namespace PRIME.Core.Services.FHIR
                 if (string.IsNullOrEmpty(c.Code))
                     continue;
 
-
-
                 if (c.Code.ToLower() == code.ToLower() && c.System == system)
                     return true;
             }
             return false;
         }
 
-
+        /// <summary>
+        /// Has Bundle configured
+        /// </summary>
+        /// <returns></returns>
         public bool HasBundle()
         {
             return _bundle != null;
@@ -77,7 +137,8 @@ namespace PRIME.Core.Services.FHIR
             return new PDObservation()
             {
                 Code = "AGE",
-                Value = new DateDiff(DateTime.Now, t.Value.Date).ElapsedYears
+                CodeNameSpace = "PRIME",
+                Value = new DateDiff(t.Value.Date,DateTime.Now).ElapsedYears
             };
         }
 
@@ -93,6 +154,7 @@ namespace PRIME.Core.Services.FHIR
                 ret.Add(new PDObservation()
                 {
                     Code = "MALE",
+                    CodeNameSpace = "PRIME",
                     Value = patient.Gender == AdministrativeGender.Male ? 1 : 0,
                 
                 });
@@ -102,6 +164,7 @@ namespace PRIME.Core.Services.FHIR
                 ret.Add(new PDObservation()
                 {
                     Code = "FEMALE",
+                    CodeNameSpace = "PRIME",
                     Value = patient.Gender == AdministrativeGender.Female ? 1 : 0
                 });
             }
@@ -144,13 +207,17 @@ namespace PRIME.Core.Services.FHIR
         {
             if (code == null) throw new ArgumentNullException(nameof(code));
             if (system == null) throw new ArgumentNullException(nameof(system));
+            //TODO: Some Warning?
+            if (!HasBundle())
+                return null;
 
-
-            var mobs = _metaObservations.FirstOrDefault((e => e.Code.ToLower() == code && e.CodeNameSpace.ToLower() == system.ToLower()));
+            var mobs = _metaObservations.FirstOrDefault((e =>e.Code!=null&&e.Code.ToLower() == code && (e.CodeNameSpace==null|| e.CodeNameSpace.ToLower() == system.ToLower())));
             if (mobs != null)
             {
                 return mobs.Value > 0;
             }
+
+            
 
             foreach (var s in _bundle.Entry)
             {
@@ -259,7 +326,7 @@ namespace PRIME.Core.Services.FHIR
         {
             if (code == null) throw new ArgumentNullException(nameof(code));
             if (system == null) throw new ArgumentNullException(nameof(system));
-            var mobs = _metaObservations.FirstOrDefault((e => e.Code.ToLower() == code.ToLower() && e.CodeNameSpace.ToLower() == system.ToLower()));
+            var mobs = _metaObservations.FirstOrDefault((e =>e.Code!=null&& e.Code.ToLower() == code.ToLower() &&(e.CodeNameSpace==null|| e.CodeNameSpace.ToLower() == system.ToLower())));
             if (mobs != null)
             {
                 return mobs.Value;
@@ -322,18 +389,30 @@ namespace PRIME.Core.Services.FHIR
             public string CodeNameSpace { get; set; }
             public long Timestamp { get; set; }
             public string Description { get; set; }
+            public string Category { get; set; }
         }
-        public void AddCondition(string oCode, string codeNamespace,double value=1.0)
+        /// <summary>
+        /// Add Condition
+        /// </summary>
+        /// <param name="oCode"></param>
+        /// <param name="codeNamespace"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool AddCondition(string oCode, string codeNamespace,double value=1.0)
         {
 
             if (_metaObservations.Any(e => Match(e, oCode, codeNamespace)))
-            {                
-                _metaObservations.FirstOrDefault(e => Match(e, oCode, codeNamespace)).Value = value;
-                
+            {   var m= _metaObservations.FirstOrDefault(e => Match(e, oCode, codeNamespace));
+                if (m == null)
+                    return false;
+                m.Value = value;
+                return true;
+
             }
             else
             {
                 _metaObservations.Add(new TmpCondition() { Code = oCode, Value = value });
+                return false;
             }
         }
 
@@ -434,6 +513,7 @@ namespace PRIME.Core.Services.FHIR
                         Weight = 1,
                         Value = 1,
                         CodeNameSpace = (s.Resource as Condition).Code.Coding.FirstOrDefault()?.System,
+                        
 
                     });
                 }
@@ -483,10 +563,14 @@ namespace PRIME.Core.Services.FHIR
                 {
                     var r = false;
                     var obs = s.Resource as Observation;
+                    if(obs==null)
+                        continue;
+
                     if (obs.Value == null)
                         continue;
 
-                    if (obs.Status.HasValue && (obs.Status == ObservationStatus.Cancelled || obs.Status == ObservationStatus.EnteredInError || obs.Status == ObservationStatus.Amended))
+                    
+                    if ( (obs.Status.HasValue && (obs.Status == ObservationStatus.Cancelled || obs.Status == ObservationStatus.EnteredInError || obs.Status == ObservationStatus.Amended)))
                     {
                         continue;
 
@@ -520,7 +604,8 @@ namespace PRIME.Core.Services.FHIR
 
                 if (observations.Count > 0)
                 {
-                    return observations.OrderByDescending(e => e.Timestamp).FirstOrDefault().Value;
+                    var obs = observations.OrderByDescending(e => e.Timestamp).FirstOrDefault();
+                    return obs?.Value;
 
                 }
             }
@@ -528,18 +613,31 @@ namespace PRIME.Core.Services.FHIR
             return false;
         }
 
+        /// <summary>
+        /// Aggregate Variables
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="aggregator"></param>
+        /// <param name="aggregators"></param>
+        /// <returns></returns>
         public async Task Aggregate(string patientId, IAggregator aggregator, List<AggrModel> aggregators)
         {
-            var obs = GetObservations();
+            var obs = GetObservations().ToList();
 
             foreach (var aggr in aggregators)
             {
-                var r = await aggregator.RunSingle(patientId, aggr.Code, "PRIME", obs, aggr.Config);
-
+                var r = await aggregator.RunSingle(patientId, aggr.Code,"PRIME", obs, aggr.Config);
+                if (r == null)
+                {
+                    //TODO: Log
+                    continue;
+                    
+                }
                 if (_metaObservations.Any(e => e.CodeNameSpace == r.CodeNameSpace && e.Code == r.Code))
                 {
-                    _metaObservations.FirstOrDefault(e => e.CodeNameSpace == r.CodeNameSpace && e.Code == r.Code)
-                        .Value = r.Value;
+                    var m = _metaObservations.FirstOrDefault(
+                        e => e.CodeNameSpace == r.CodeNameSpace && e.Code == r.Code);
+                    if(m!=null) m.Value = r.Value;
                 }
                 else{
                     _metaObservations.Add(r);

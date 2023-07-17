@@ -55,8 +55,8 @@ export class MedCheckComponent {
         var url = this.baseUrl + 'api/v1/medcheck/?genes=' + this.genes + '&drugs=' + this.drugs;
         this.httpClient.get(url).subscribe(result => {
             var self = this;
-            this.drugResults = (result.json() as Result).result.drugs;
-            this.geneResults = (result.json() as Result).result.genes;
+            this.drugResults = (result.json() as CheckResult).drugs;
+            this.geneResults = (result.json() as CheckResult).genes;
 
         }, error => console.error(error));
 

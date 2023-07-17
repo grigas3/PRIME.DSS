@@ -1,0 +1,11 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Max",
+  "OutputCode": "daytime sleep.",
+  "Code": "DAYSLEEP",
+  "Name": "daytime sleepiness",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "Threshold": true,
+  "ThresholdValue": 1
+}

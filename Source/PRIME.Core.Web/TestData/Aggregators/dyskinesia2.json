@@ -1,0 +1,12 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "OutputCode": "dyskinesia",
+  "Code": "DYSKINESIA",
+  "Name": "Dyskinesia",
+  "CodeNamespace": "www.netmed360.com",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "MetaScaleA": 0.25,
+  "MetaScaleB": 25
+}

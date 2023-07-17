@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Metadata;
 using Newtonsoft.Json;
 using PRIME.Core.Common.Interfaces;
@@ -29,6 +30,10 @@ namespace PRIME.Core.DSS.Treatment
         /// </summary>
         public FuzzyCollection RuleModel { get; set; }
 
+        /// <summary>
+        /// Dexi Model
+        /// </summary>
+        public DSSConfig DexiModel { get; set; }
 
         [JsonIgnore]
         public IEnumerable<IVariable> Variables
@@ -44,6 +49,8 @@ namespace PRIME.Core.DSS.Treatment
                 if (NaiveModel != null)
                     variables.AddRange(NaiveModel.Variables);
 
+                if (DexiModel != null)
+                    variables.AddRange(DexiModel.Input);
 
                 if (RuleModel != null)
                     variables.AddRange(RuleModel.Variables);
@@ -92,6 +99,8 @@ namespace PRIME.Core.DSS.Treatment
         /// </summary>
         public string Summary { get; set; }
 
+        public string Source { get; set; }
+
 
         public static TreatmentClassifier FromJson(string json)
         {
@@ -108,7 +117,7 @@ namespace PRIME.Core.DSS.Treatment
 
         }
         public string Id { get; set; }
-
+        public string Description { get; set; }
     }
 
     public interface ITreatmentClassifier

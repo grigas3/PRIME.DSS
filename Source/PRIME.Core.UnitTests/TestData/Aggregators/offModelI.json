@@ -1,0 +1,8 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "OutputCode": "OFF",
+  "Code": "OFFTIME",
+  "Name": "OFFTIME",
+  "Version": "1.0"
+}

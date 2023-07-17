@@ -1699,6 +1699,11 @@ namespace PRIME.Core.DSS.Dexi
             {
                 StringBuilder sb = new StringBuilder();
                 bool empty = true;
+                if (Values == null)
+                    return "";
+
+                if (scale == null)
+                    return "";
                 if (Values.Cumulative != 1.0)
                     sb.Append("[" + Model.FormatDouble(Values.Cumulative) + "]");
                 for (int i = 0; i < Values.Count; i++)
@@ -1709,7 +1714,12 @@ namespace PRIME.Core.DSS.Dexi
                         if (!empty)
                             sb.Append(",");
                         empty = false;
-                        sb.Append(scale.FindValue(i).Name);
+
+                        var v = scale.FindValue(i);
+                        if (v == null)
+                            continue;
+
+                        sb.Append(v.Name);
                         if (fact != 1.0)
                         {
                             sb.Append("/" + Model.FormatDouble(fact));

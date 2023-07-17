@@ -36,17 +36,18 @@ namespace PRIME.Web.Controllers
         public IActionResult Start()
         {
 
-            var jobs = _jobFactory.GetJobs();
-            foreach (var job in jobs)
-            {
-                RecurringJob.AddOrUpdate(job.GetId(),
-   () =>job.Run(),
-  Cron.Daily);
+  //          var jobs = _jobFactory.GetJobs();
+  //          foreach (var job in jobs)
+  //          {
+  //              RecurringJob.AddOrUpdate(job.GetId(),
+  // () =>job.Run(),
+  //Cron.Daily);
 
-            }
+  //          }
 
-            return Ok($"{jobs.Count()} Jobs registered");
+  //          return Ok($"{jobs.Count()} Jobs registered");
 
+  return Ok();
         }
     }
 }

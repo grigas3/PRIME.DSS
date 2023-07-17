@@ -18,7 +18,7 @@ namespace PRIME.Core.Web.Controllers
         private readonly ILogger _logger;
 
         #endregion
-        #region Controllers
+        #region Constructor
         /// <summary>
         /// Constructor
         /// </summary>

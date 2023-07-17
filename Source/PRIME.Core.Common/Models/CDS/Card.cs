@@ -27,6 +27,7 @@ namespace PRIME.Core.Common.Models.CDS
 //}
 
 
+
     /// <summary>
     /// Card Model
     /// https://www.hl7.org/fhir/clinicalreasoning-cds-on-fhir.html
@@ -62,5 +63,39 @@ namespace PRIME.Core.Common.Models.CDS
         /// Code
         /// </summary>
         public string Code { get; set; }
+
+
+        /// <summary>
+        /// Weight Or Score
+        /// </summary>
+        public double Score { get; set; }
+
+        /// <summary>
+        /// Related Suggestions
+        /// </summary>
+        public List<Suggestion> Suggestions { get; set; }
+
+       
+    }
+
+
+    public class SuggestionAction
+    {
+        [JsonProperty("type")]
+        public string ActionType { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+    }
+    /// <summary>
+    /// Card Suggestion
+    /// </summary>
+    public class Suggestion
+    {
+        [JsonProperty("links")]
+        public string Label { get; set; }
+        [JsonProperty("actions")]
+        public List<SuggestionAction> Actions { get; set; }
     }
 }

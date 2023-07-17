@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject  } from '@angular/core';
+import { ViewChild,Component, OnInit, Inject  } from '@angular/core';
 import { Http } from '@angular/http';
 import { ActivatedRoute } from '@angular/router';
 @Component({
@@ -9,13 +9,14 @@ import { ActivatedRoute } from '@angular/router';
 export class AggrValueComponent implements OnInit {
     public aggrConfig: AggrConfig;
     public aggrOutput: PDObservation[];
+    public results: ValidationResult[];
     public patientId: string;
     public bundle: string;
     private httpClient: Http;
     private baseUrl: string;
     private modelId: string;    
     private code: string;
-
+    
 
     constructor(private route: ActivatedRoute,http: Http, @Inject('BASE_URL') baseUrl: string) {
 
@@ -26,7 +27,7 @@ export class AggrValueComponent implements OnInit {
         this.patientId = "";
 
     }
-
+    @ViewChild("fileInput") fileInput: any;
     ngOnInit() {
 
         this.route.params.subscribe(params => {
@@ -53,7 +54,27 @@ export class AggrValueComponent implements OnInit {
 
 
     }
- 
+    addFile(): void {
+        let fi = this.fileInput.nativeElement;
+        if (fi.files && fi.files[0]) {
+            let fileToUpload = fi.files[0];
+
+            if (fileToUpload) {
+                let input = new FormData();
+                input.append("file", fileToUpload);
+
+                this.httpClient
+                    .post("/api/v1/aggrvalidate?id="+this.modelId, input).subscribe(result => {
+                        this.results = result.json() as ValidationResult[];
+                    });
+                //this.uploadService.upload(fileToUpload)
+                //    .subscribe(res => {
+                //        console.log(res);
+                //    });
+            } else
+                console.log("FileToUpload was null or undefined.");
+        }
+    }
     execute(): void {
 
         var url = this.baseUrl + 'api/v1/fhireval/';
@@ -72,32 +93,7 @@ export class AggrValueComponent implements OnInit {
             //this.refresh();
         }, error => console.error(error));
 
-        //this.httpClient.post(url).subscribe(result => {
-        //    var self = this;
-        //    this.aggrOutput = result.json() as PDObservation[];
-        //    console.log(this.aggrOutput.map(function (item) {
-        //        return item.value;
-        //    }));
-        //    console.log(this.aggrOutput.map(function (item) {
-        //        return self.timeConverter(item.timestamp);
-        //    }))
-        
-        //    let _lineChartData: Array<any>= [
-        //        {
-        //            data: this.aggrOutput.map(function (item) {
-        //                return item.value;
-        //            }), label: this.code
-        //        }
-        //    ];
-
-        //    let _lineChartLabels: Array < any >= this.aggrOutput.map(function (item) {
-        //        return self.timeConverter(item.timestamp);
-        //    });
-        //    this.lineChartData = _lineChartData;
-        //    this.lineChartLabels = _lineChartLabels;
-
-        // ;
-        //}, error => console.error(error));
+     
         
         
     }
@@ -166,6 +162,14 @@ interface AggrConfig {
     name: string;
     code: string;
 }
+
+interface ValidationResult {
+    input: string;
+    expectedOutput: string;
+    output: string;
+    valid:boolean;
+}
+
 //Aggregation Confi Model
 interface FHIREvalModel {
     bundleJson: string;

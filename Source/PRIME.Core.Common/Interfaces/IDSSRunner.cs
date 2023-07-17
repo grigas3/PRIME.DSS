@@ -10,13 +10,13 @@ namespace PRIME.Core.Common.Interfaces
     public interface IDSSRunner
     {
 
-        /// <summary>
-        /// Run (used for testing) with a dictionary of values
-        /// </summary>
-        /// <param name="configJson">DSS Config in Json format</param>
-        /// <param name="values"></param>
-        /// <returns>List of DSS Values</returns>
-        IEnumerable<DSSValue> Run(string configJson, Dictionary<string, string> values);
+        ///// <summary>
+        ///// Run (used for testing) with a dictionary of values
+        ///// </summary>
+        ///// <param name="configJson">DSS Config in Json format</param>
+        ///// <param name="values"></param>
+        ///// <returns>List of DSS Values</returns>
+        //IEnumerable<DSSValue> Run(string configJson, Dictionary<string, string> values);
         /// <summary>
         /// Run DSS
         /// </summary>

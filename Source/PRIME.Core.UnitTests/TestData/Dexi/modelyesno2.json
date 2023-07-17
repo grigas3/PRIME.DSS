@@ -1,0 +1,381 @@
+{
+  "Version": "1.0",
+  "Name":"Yes/No Dss",
+  "DexiFile": "DexiModels\\MedChange_I.dxi",
+  "Input": [
+    {
+      "Name": "bradykinesia",
+      "Code": "STBRAD30",
+      "DefaultValue": 0,
+      "Uri": null,
+     "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "tremor at rest",
+      "Code": "STTRMR30",
+      "DefaultValue": 0,
+      "Uri": null,
+     "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "tremor of hands",
+      "Code": "STTRMP30",
+      "DefaultValue": 0,
+      "Uri": null,
+    "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "dyskinesia intensity",
+      "Code": "STDYSS30",
+      "DefaultValue": 0,
+      "Uri": null,
+     "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "dyskinesia duration",
+      "Code": "STDYSD30",
+      "DefaultValue": 0,
+      "Uri": null,
+    "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "gait",
+      "Code": "STUPDRSG",
+      "DefaultValue": 0,
+      "Uri": null,
+     "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "freezing of gait",
+      "Code": "STFOG",
+      "DefaultValue": 0,
+      "Uri": null,
+     "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "offs duration",
+      "Code": "STOFFDUR",
+      "DefaultValue": 0,
+      "Uri": null,
+     "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "hallucinations",
+      "Code": "HALLUC",
+      "DefaultValue": 0,
+      "Uri": null,
+      "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "BIS-11",
+      "Code": "BIS11",
+      "DefaultValue": 0,
+      "Uri": null,
+      "Source": "Clinical",
+      "ValueType": "Categorical",
+     "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "mood",
+      "Code": "MOOD",
+      "DefaultValue": 0,
+      "Uri": null,
+      "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "cognition",
+      "Code": "COGNITION",
+      "DefaultValue": 0,
+      "Uri": null,
+      "Source": "Clinical",
+      "ValueType": "Categorical",
+     "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "NMSS",
+      "Code": "NMSS",
+      "DefaultValue": 0,
+      "Uri": null,
+      "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "severe",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "moderate",
+          "Value": 1,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "mild",
+          "Value": 2,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    },
+    {
+      "Name": "activity",
+      "Code": "activity",
+      "DefaultValue": 1,
+      "Uri": null,
+      "Source": "Clinical",
+      "ValueType": "Categorical",
+      "CategoryMapping": [
+        {
+          "Name": "low",
+          "Value": 0,
+          "ValueMeaning": null
+        },
+        {
+          "Name": "high",
+          "Value": 1,
+          "ValueMeaning": null
+        }
+      ],
+      "NumericBins": null,
+      "NumericMapping": null
+    }
+  ],
+  "AggregationPeriodDays": 30
+}

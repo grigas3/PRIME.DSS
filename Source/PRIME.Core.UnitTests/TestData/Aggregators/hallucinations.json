@@ -1,0 +1,11 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Max",
+  "OutputCode": "hallucinations",
+  "Code": "HALLUCINATIONS",
+  "Name": "hallucinations",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "Threshold": true,
+  "ThresholdValue": 1
+}

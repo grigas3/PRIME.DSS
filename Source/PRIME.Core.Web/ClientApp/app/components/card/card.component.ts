@@ -14,7 +14,7 @@ export class CardComponent implements OnInit {
     cards: Cards[];
 
     
-    patientId: string;
+    public patientId: string;
     code: string;
     clientAuthorizationUrl: string;
     clientAuthenticationUrl: string;
@@ -100,7 +100,7 @@ export class CardComponent implements OnInit {
 
             //if (this.hasLaunch) {
             //    path = path + '?launch=' + this.patientId;
-            //}
+            //}st
         }
 
 

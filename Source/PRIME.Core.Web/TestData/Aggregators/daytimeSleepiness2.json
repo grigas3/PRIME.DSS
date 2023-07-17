@@ -1,0 +1,12 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Max",
+  "OutputCode": "daytime sleep.",
+  "Code": "UPDRS_I_7",
+  "Name": "daytime sleepiness",
+  "Codenamespace": "www.netmed360.com",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "Threshold": true,
+  "ThresholdValue": 1
+}

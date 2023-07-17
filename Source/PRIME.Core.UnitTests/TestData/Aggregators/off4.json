@@ -1,0 +1,14 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "OutputCode": "OFF",
+  "Code": "OFFTIME",
+  "Name": "OFFTIME",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "MetaScaleA": 0.2,
+  "MetaScaleB": 30,
+  "MetaScaleA1": 0.2,
+  "MetaScaleB1": 70
+
+}

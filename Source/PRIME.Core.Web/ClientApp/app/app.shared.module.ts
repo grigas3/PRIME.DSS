@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { ChartsModule } from 'ng2-charts';
+import { BootstrapSwitchModule } from 'angular2-bootstrap-switch';
 import { StateService } from './services/state.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './components/app/app.component';
@@ -22,6 +23,7 @@ import { AggrEditorComponent } from './components/aggreditor/aggreditor.componen
 import { DSSComponent } from './components/dss/dss.component';
 import { CDSClientComponent } from './components/cdsclients/cdsclients.component';
 import { MedCheckComponent } from './components/medcheck/medcheck.component';
+import { StitchComponent } from './components/stitch/stitch.component';
 import { AggregationComponent } from './components/aggregation/aggr.component';
 import { VariableComponent } from './components/variables/variable.component';
 import { CardComponent } from './components/card/card.component';
@@ -38,6 +40,7 @@ import { CardComponent } from './components/card/card.component';
         DSSEditorComponent,
         CDSComponent,
         MedCheckComponent,
+        StitchComponent,
         AlertComponent,
         AlertValueComponent,
         AggregationComponent,
@@ -55,6 +58,8 @@ import { CardComponent } from './components/card/card.component';
         HttpModule,
         FormsModule,
         ChartsModule,
+      //  BootstrapSwitchModule.forRoot(),
+       // BrowserAnimationsModule,
        // BrowserAnimationsModule, ToasterModule.forRoot(),
         RouterModule.forRoot([
             
@@ -79,6 +84,7 @@ import { CardComponent } from './components/card/card.component';
                    { path: 'variable/:id', component:VariableComponent },
              
                    { path: 'medcheck', component: MedCheckComponent },
+                   { path: 'stitch', component: StitchComponent },
                    { path: 'alert', component: AlertComponent },
                    { path: 'aggregation/:id', component: AggregationComponent },
                    { path: 'aggregation', component: AggregationComponent },

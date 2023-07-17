@@ -95,7 +95,17 @@ namespace PRIME.Core.Web.Extensions
             }
             else
             {
-                return new AggrConfig();
+                return new AggrConfig()
+                {
+
+                    Name = model.Name,
+                    Code = model.Code,
+                    CodeNameSpace = "PRIME",
+                    AggregationType = "total",
+                    Version = "1"
+                    
+
+                };
             }
 
 

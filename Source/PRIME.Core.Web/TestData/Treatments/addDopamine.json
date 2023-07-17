@@ -1,0 +1,7 @@
+{
+"Name":"Add dopamine agonist",
+"Code":"DOPAMINE",
+"CodeNamespace":"PRIME",
+"Option":"Add",
+Variables:[{Name:"Fluctuations",Code:"FLUCTUATIONS",Weight:0.9,Prior:0.2},{Name:"Patient with dyskinesia",Code:"DYSKINESIA",Weight:0.9,Prior:0.2}]
+}

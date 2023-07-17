@@ -7,6 +7,7 @@ using PRIME.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -51,7 +52,7 @@ namespace PRIME.Core.DSS
         /// </summary>
         /// <param name="modelFileName"></param>
         /// <returns></returns>
-        private Model LoadModel(string modelFileName)
+        private static Model LoadModel(string modelFileName)
         {
             return new Model(modelFileName);
         }
@@ -89,16 +90,29 @@ namespace PRIME.Core.DSS
         /// <param name="configJson">Dss config in json format</param>
         /// <param name="values"></param>
         /// <returns></returns>
-        public IEnumerable<DSSValue> Run(string configJson, Dictionary<string, string> values)
+        public static IEnumerable<DSSValue> Run(string configJson, Dictionary<string, string> values)
         {
             //Dictionary<string, int> valueMapping = new Dictionary<string, int>();
             var config = JsonConvert.DeserializeObject<DSSConfig>(configJson);
+            return Run(config, values);
+
+        }
+
+        /// <summary>
+        /// Run using specific values
+        /// </summary>        
+        /// <param name="configJson">Dss config in json format</param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static IEnumerable<DSSValue> Run(DSSConfig config, Dictionary<string, string> values)
+        {
+            //Dictionary<string, int> valueMapping = new Dictionary<string, int>();
+            
 
             //TODO: Handle Exceptions
             var model = LoadModel(config.DexiFile);
             return Evaluate(model, config, values);
         }
-
 
         /// <summary>
         /// Evaluate
@@ -107,37 +121,66 @@ namespace PRIME.Core.DSS
         /// <param name="config"></param>
         /// <param name="values"></param>
         /// <returns></returns>
-        private IEnumerable<DSSValue> Evaluate(Model model, DSSConfig config, Dictionary<string, string> values)
+        public static IEnumerable<DSSValue> Evaluate(Model model, DSSConfig config, Dictionary<string, string> values)
         {
             foreach (var parameterInfo in config.Input)
             {
                 var key = parameterInfo.Name;
-
-                if (values.ContainsKey(key) && !string.IsNullOrEmpty(values[key]))
+                var code = parameterInfo.Code;
+                try
                 {
-                    if (parameterInfo.Numeric)
+
+                    if (values.ContainsKey(key) && !string.IsNullOrEmpty(values[key]))
                     {
-                        double v = double.Parse(values[key]);
-                        model.SetInputValue(parameterInfo.Name, parameterInfo.GetNumericMapping(v));
+                        if (parameterInfo.Numeric)
+                        {
+                            double v = double.Parse(values[key]);
+                            model.SetInputValue(parameterInfo.Name, parameterInfo.GetNumericMapping(v));
+                        }
+                        else
+                        {
+                            int? v = int.Parse(values[key]);//parameterInfo.GetCategoryMapping2(values[key]);
+                            if (v.HasValue)
+                                model.SetInputValue(parameterInfo.Name, v.Value);
+                            else
+                                model.SetInputValue(parameterInfo.Name, parameterInfo.DefaultValue);
+                        }
+                    }
+
+                    else if (values.ContainsKey(code) && !string.IsNullOrEmpty(values[code]))
+                    {
+                        if (parameterInfo.Numeric)
+                        {
+                            double v = double.Parse(values[code],CultureInfo.InvariantCulture);
+                            model.SetInputValue(parameterInfo.Name, parameterInfo.GetNumericMapping(v));
+                        }
+                        else
+                        {
+                            //int? v = parameterInfo.GetCategoryMapping(values[code]);
+                            int? v = int.Parse(values[code]);
+                            if (v.HasValue)
+                                model.SetInputValue(parameterInfo.Name, v.Value);
+                            else
+                                model.SetInputValue(parameterInfo.Name, parameterInfo.DefaultValue);
+                        }
                     }
                     else
                     {
-                        int? v = parameterInfo.GetCategoryMapping(values[key]);
-                        if (v.HasValue)
-                            model.SetInputValue(parameterInfo.Name, v.Value);
-                        else
-                            model.SetInputValue(parameterInfo.Name, parameterInfo.DefaultValue);
+                        model.SetInputValue(parameterInfo.Name, parameterInfo.DefaultValue);
                     }
+
                 }
-                else
+                catch (Exception e)
                 {
-                    model.SetInputValue(parameterInfo.Name, parameterInfo.DefaultValue);
+                    Debug.WriteLine(("AA"));
                 }
             }
 
+            
             model.Evaluate(Model.Evaluation.SET, true);
             var ret = model.Aggregate.Select(e => new DSSValue()
-                {Name = e.Name, Code = e.Name, Value = e.ValuesString});
+                {Name = e.Name, Code = e.Name, Value = e.ValuesString}).Concat(model.Basic.Select(e => new DSSValue()
+                {Name = e.Name, Code = e.Name, Value = e.ValuesString}));
             return ret;
         }
 
@@ -147,7 +190,7 @@ namespace PRIME.Core.DSS
         /// <param name="patientId">Patient Id</param>
         /// <param name="configJson">DSS Mapping file</param>
         /// <returns></returns>
-        public async Task<IEnumerable<DSSValue>> GetInputValues(string patientId, string configJson)
+        public  async Task<IEnumerable<DSSValue>> GetInputValues(string patientId, string configJson)
         {
             Dictionary<string, int> valueMapping = new Dictionary<string, int>();
             var config = JsonConvert.DeserializeObject<DSSConfig>(configJson);
@@ -161,7 +204,7 @@ namespace PRIME.Core.DSS
         /// <param name="patientId"></param>
         /// <param name="config"></param>
         /// <returns></returns>
-        private async Task<IEnumerable<DSSValue>> GetInputValues(string patientId, DSSConfig config)
+        private  async Task<IEnumerable<DSSValue>> GetInputValues(string patientId, DSSConfig config)
         {
             List<DSSValue> values = new List<DSSValue>();
             //Codes from observations
@@ -305,7 +348,7 @@ namespace PRIME.Core.DSS
         /// <param name="patientId">Patient Id</param>
         /// <param name="configJson">DSS Config as Json String file</param>
         /// <returns></returns>
-        public async Task<IEnumerable<DSSValue>> Run(string patientId, string configJson)
+        public  async Task<IEnumerable<DSSValue>> Run(string patientId, string configJson)
         {
             Dictionary<string, int> valueMapping = new Dictionary<string, int>();
             var config = DSSConfig.FromString(configJson);

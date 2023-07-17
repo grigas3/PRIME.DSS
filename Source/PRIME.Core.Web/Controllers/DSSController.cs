@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Schema.Generation;
 using PRIME.Core.Common.Interfaces;
 using PRIME.Core.Context.Entities;
 using PRIME.Core.DSS;
 using PRIME.Core.DSS.Fuzzy;
+using PRIME.Core.DSS.Treatment;
 using PRIME.Core.Web.Context;
 
 namespace PRIME.Core.Web.Controllers
@@ -97,6 +99,24 @@ namespace PRIME.Core.Web.Controllers
         {
             try
             {
+
+                if (!string.IsNullOrEmpty(model.DexiFile))
+                {
+                    var config = DSSConfig.CreateFromModel(model.DexiFile, model.Code);
+
+                    TreatmentClassifier classifier = new TreatmentClassifier()
+                    {
+                        Code = model.Code,
+                        Name = model.Code,
+                        CodeNamespace = "PRIME",
+                        DexiModel = config,
+
+                    };
+
+                    model.Config = JsonConvert.SerializeObject(classifier);
+
+                }
+
                 await _context.InserOrUpdateAsync(model);
             }
             catch (Exception ex)

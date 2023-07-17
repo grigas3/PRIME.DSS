@@ -6,9 +6,11 @@ namespace PRIME.Core.DSS.Fuzzy
 
     public class FuzzyVariable : IVariable
     {
+      
         public string CodeNameSpace { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
+        public List<string> Values { get; }
     }
 
     public class FuzzyCollection

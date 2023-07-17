@@ -1,0 +1,11 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "OutputCode": "age",
+  "Code": "AGE",
+  "Name": "age",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "MetaScaleA": 1,
+  "MetaScaleB": 75
+}

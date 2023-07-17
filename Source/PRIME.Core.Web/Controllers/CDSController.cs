@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hl7.Fhir.Model;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Schema;
 using PRIME.Core.Common.Interfaces;
 using PRIME.Core.Common.Models.CDS;
 using PRIME.Core.Context.Entities;
 using PRIME.Core.DSS.Treatment;
+using PRIME.Core.Models;
 using PRIME.Core.Web.Extensions;
 
 namespace PRIME.Core.Web.Controllers
@@ -79,137 +81,6 @@ namespace PRIME.Core.Web.Controllers
         public bool EvaluateDSS { get; set; }
     }
 
-
-    public abstract class BaseCDSController:Controller
-    {
-        public class CDSInput
-        {
-            [JsonProperty("id")]
-            public string Id { get; set; }
-            [JsonProperty("input")] public string Input { get; set; }
-        }
-
-        public class ConditionRepository : IConditionRepository
-        {
-            private readonly List<Condition> _codes = new List<Condition>();
-
-
-
-            public void Add(Condition c)
-            {
-                _codes.Add(c);
-            }
-
-            public async Task Init(string id)
-            {
-
-            }
-
-            public Task Aggregate(string patientId, IAggregator aggregator, List<AggrModel> aggregators)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool? HasCondition(string code, string system)
-            {
-                var v= _codes.Where(e => e.Code.ToLower() == code.ToLower()).Select(e => e.Value).FirstOrDefault();
-
-                if (v.HasValue)
-                    return v.Value > 0;
-                return new bool?();
-            }
-
-            public bool? HasCondition(string code, string system, Func<object, bool> convert)
-            {
-                throw new NotImplementedException();
-            }
-
-            /// <summary>
-            /// Get Condition Value
-            /// </summary>
-            /// <param name="code"></param>
-            /// <param name="system"></param>
-            /// <returns></returns>
-            public double? GetCondition(string code, string system)
-            {
-                var v=_codes.Where(e => e.Code.ToLower() == code.ToLower()).Select(e => e.Value).FirstOrDefault();
-
-                if (v.HasValue)
-                {
-                    return v.Value;
-                }
-
-                return new double();
-
-            }
-
-            public void AddCondition(string oCode, string codeNamespace,double value=1.0)
-            {
-
-                if (_codes.Any(e => Match(e, oCode)))
-                {
-                    _codes.FirstOrDefault(e => Match(e, oCode)).Value = value;
-
-                }
-                else
-                {
-                    _codes.Add(new Condition() { Code = oCode, Value = value });
-                }
-
-
-            }
-            private bool Match(Condition obs, string code)
-            {
-
-                if (obs.Code == null)
-                    return false;
-                if (code == null)
-                    return false;
-                    return code.ToLower() == obs.Code.ToLower();
-
-                
-            }
-
-            public void RemoveCondition(string oCode, string codeNamespace)
-            {
-                if (string.IsNullOrEmpty(codeNamespace))
-                    codeNamespace = "PRIME";
-                var c= _codes.FirstOrDefault(e=>e.Code.ToLower() == oCode.ToLower());
-                if(c!=null)
-                _codes.Remove(c);
-            }
-
-            public ConditionResult GetConditionRes(string code, string system)
-            {
-                var v = _codes.Where(e => e.Code.ToLower() == code.ToLower()).Select(e => e.Value).FirstOrDefault();
-
-                if (v.HasValue)
-                {
-                    return new ConditionResult()
-                    {
-                        Value=v.Value,
-                        Code=code,
-                        CodeNameSpace =system
-                    };
-                }
-
-                return new ConditionResult()
-                {
-                    
-                    Code = code,
-                    CodeNameSpace = system
-                };
-            }
-        }
-
-        public class Condition
-        {
-            public string Name { get; set; }
-            public string Code { get; set; }
-            public double? Value { get; set; }
-            public string Category { get; set; }
-        }
-    }
 
     [Route("api/v1/[controller]")]
     public class CDSController : BaseCDSController
@@ -330,7 +201,20 @@ namespace PRIME.Core.Web.Controllers
                     else if (v.ToLower() == "false")
                         repository.Add(new Condition {Code = c.Code, Value = 0});
                     else
-                        repository.Add(new Condition {Code = c.Code, Value = new double?()});
+                    {
+
+
+                        if (double.TryParse(v, out var f))
+                        {
+                            repository.Add(new Condition { Code = c.Code, Value = f });
+                        }
+                        else
+                        {
+                            repository.Add(new Condition { Code = c.Code, Value = new double?() });
+                        }
+                        
+
+                    }
                 }
 
                 

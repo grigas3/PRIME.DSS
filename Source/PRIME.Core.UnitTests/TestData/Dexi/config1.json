@@ -1,0 +1,337 @@
+{
+  "NaiveModel": null,
+  "RuleModel": null,
+  "Description": "AAAA" ,
+  "DexiModel": {
+    "Code": "ChangeMedication",
+    "Name": "ChangeMedication",
+    "DexiOutputValue": "change",
+    "Version": "1.0",
+    "DexiFile": "./DexiModels\\ModelYesNoA.dxi",
+    "Input": [
+      {
+        "Code": "bradykinesia",
+        "CodeNameSpace": null,
+        "Name": "bradykinesia",
+        "Values": [ "problematic", "normal" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "1",
+            "Value": 0,
+            "ValueMeaning": null
+          },
+          {
+            "Name": "0",
+            "Value": 1,
+            "ValueMeaning": null
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "tremor",
+        "CodeNameSpace": null,
+        "Name": "tremor",
+        "Values": [ "problematic", "normal" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "1",
+            "Value": 0,
+            "ValueMeaning": null
+          },
+          {
+            "Name": "0",
+            "Value": 1,
+            "ValueMeaning": null
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "gait",
+        "CodeNameSpace": null,
+        "Name": "gait",
+        "Values": [ "problematic", "normal" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "1",
+            "Value": 0,
+            "ValueMeaning": "problematic"
+          },
+          {
+            "Name": "0",
+            "Value": 1,
+            "ValueMeaning": "normal"
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "dyskinesia",
+        "CodeNameSpace": null,
+        "Name": "dyskinesia",
+        "Values": [ "severe", "problematic", "normal" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "1",
+            "Value": 1,
+            "ValueMeaning": null
+          },
+          {
+            "Name": "0",
+            "Value": 2,
+            "ValueMeaning": null
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "on/off fluctuations",
+        "CodeNameSpace": null,
+        "Name": "on/off fluctuations",
+        "Values": [ "problematic", "normal" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "1",
+            "Value": 0,
+            "ValueMeaning": null
+          },
+          {
+            "Name": "0",
+            "Value": 1,
+            "ValueMeaning": null
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "daytime sleep.",
+        "CodeNameSpace": null,
+        "Name": "daytime sleep.",
+        "Values": [ "problematic", "normal" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "1",
+            "Value": 0,
+            "ValueMeaning": null
+          },
+          {
+            "Name": "0",
+            "Value": 1,
+            "ValueMeaning": null
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "cog.disorder",
+        "CodeNameSpace": null,
+        "Name": "cog.disorder",
+        "Values": [ "problematic", "normal" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "1",
+            "Value": 0,
+            "ValueMeaning": null
+          },
+          {
+            "Name": "0",
+            "Value": 1,
+            "ValueMeaning": null
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "impulsivity",
+        "CodeNameSpace": null,
+        "Name": "impulsivity",
+        "Values": [ "problematic", "normal" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "1",
+            "Value": 0,
+            "ValueMeaning": null
+          },
+          {
+            "Name": "0",
+            "Value": 1,
+            "ValueMeaning": null
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "depression",
+        "CodeNameSpace": null,
+        "Name": "depression",
+        "Values": [ "problematic", "normal" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "1",
+            "Value": 0,
+            "ValueMeaning": "problematic"
+          },
+          {
+            "Name": "0",
+            "Value": 1,
+            "ValueMeaning": "normal"
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "hallucinations",
+        "CodeNameSpace": null,
+        "Name": "hallucinations",
+        "Values": [ "problematic", "normal" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "1",
+            "Value": 0,
+            "ValueMeaning": "problematic"
+          },
+          {
+            "Name": "0",
+            "Value": 1,
+            "ValueMeaning": "normal"
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "age",
+        "CodeNameSpace": null,
+        "Name": "age",
+        "Values": [ "younger", "older" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "0",
+            "Value": 0,
+            "ValueMeaning": "younger"
+          },
+          {
+            "Name": "1",
+            "Value": 1,
+            "ValueMeaning": "older"
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "employment",
+        "CodeNameSpace": null,
+        "Name": "employment",
+        "Values": [ "employed", "unemployed" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "employed",
+            "Value": 0,
+            "ValueMeaning": "employed"
+          },
+          {
+            "Name": "unemployed",
+            "Value": 1,
+            "ValueMeaning": "unemployed"
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      },
+      {
+        "Code": "living alone",
+        "CodeNameSpace": null,
+        "Name": "living alone",
+        "Values": [ "yes", "no" ],
+        "DefaultValue": 0,
+        "Source": null,
+        "ValueType": "categorical",
+        "CategoryMapping": [
+          {
+            "Name": "0",
+            "Value": 0,
+            "ValueMeaning": "yes"
+          },
+          {
+            "Name": "1",
+            "Value": 1,
+            "ValueMeaning": "no"
+          }
+        ],
+        "NumericBins": null,
+        "NumericMapping": null,
+        "Numeric": false
+      }
+    ],
+    "AggregationPeriodDays": 0
+  },
+  "Preconditions": null,
+  "Name": "ChangeMedication",
+  "Code": "ChangeMedication",
+  "CodeNamespace": "PRIME",
+  "ReplacementCode": null,
+  "ReplacementCodeNamespace": null,
+  "Option": 0,
+  "Summary": null,
+  "Source": null,
+  "Id": null
+}

@@ -56,18 +56,44 @@ namespace PRIME.Core.Aggregators
         /// Default 1.0
         /// </summary>
         public double MetaScale { get; set; }
-        
+        /// <summary>
+        /// Sigmoid A
+        /// </summary>
       //  [JsonRequired]
         [Description("Scale meta aggregated value")]
         public double? MetaScaleA { get; set; }
 
 
-        
+        /// <summary>
+        /// Sigmoid B
+        /// </summary>
         //  [JsonRequired]
         [Description("Scale meta aggregated value")]
         public double? MetaScaleB { get; set; }
 
+
+        /// <summary>
+        /// Sigmoid A
+        /// </summary>
+        //  [JsonRequired]
+        [Description("Scale meta aggregated value")]
+        public double? MetaScaleA1 { get; set; }
+
+
+        /// <summary>
+        /// Sigmoid B
+        /// </summary>
+        //  [JsonRequired]
+        [Description("Scale meta aggregated value")]
+        public double? MetaScaleB1 { get; set; }
+
+        /// <summary>
+        /// Min Value
+        /// </summary>
         public double? Min { get; set; }
+        /// <summary>
+        /// MAx Value
+        /// </summary>
         public double? Max { get; set; }
 
 
@@ -76,10 +102,13 @@ namespace PRIME.Core.Aggregators
         /// </summary>
         public string CodeNameSpace { get; set; }
 
+
+        public string HighCategoryMapping { get; set; }
+        public string LowCategoryMapping { get; set; }
+
         /// <summary>
         /// Variables
         /// </summary>
-        [JsonRequired]
         public List<AggrVariable> Variables { get; set; }
         /// <summary>
         /// Beta
@@ -116,6 +145,7 @@ namespace PRIME.Core.Aggregators
         public bool Threshold { get; set; }
         /// <summary>
         /// Code
+        /// For DEXI this should map to Attribute Name
         /// </summary>
         [Description("Aggregated observation code")]
         [JsonRequired]
@@ -142,7 +172,17 @@ namespace PRIME.Core.Aggregators
         [JsonRequired]
         public string Version { get; set; }
 
+
+        /// <summary>
+        /// Aggregation Output Scale
+        /// This is used for dexi models to map aggregations to scale
+        /// </summary>
         public string OutputCode { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Order { get; set; }
 
         #region Helpers
         /// <summary>
@@ -234,15 +274,38 @@ namespace PRIME.Core.Aggregators
 
 
         }
+
+        /// <summary>
+        /// Sigmoid Function
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="a"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public static double Sigmoid(double x, double a, double c)
         {
             return 1.0 / (1.0 + Math.Exp(-a * (x - c)));
         }
 
+        /// <summary>
+        /// Scale
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public double Scale(double v)
         {
-            if(MetaScaleA.HasValue&&MetaScaleB.HasValue)
-                return Math.Round(Sigmoid(v, MetaScaleA.Value, MetaScaleB.Value),2);
+
+            if (MetaScaleA.HasValue && MetaScaleB.HasValue)
+            {
+                double v1 = 0;
+                v1+= Math.Round(Sigmoid(v, MetaScaleA.Value, MetaScaleB.Value), 2);
+
+                if (MetaScaleA1.HasValue && MetaScaleB1.HasValue)
+                    v1 += Math.Round(Sigmoid(v, MetaScaleA1.Value, MetaScaleB1.Value), 2);
+
+                return v1;
+
+            }
 
             return v;
 
@@ -251,39 +314,6 @@ namespace PRIME.Core.Aggregators
 
         #endregion
 
-
-
-    }
-
-    /// <summary>
-    /// Aggregation Variable Definition
-    /// </summary>
-    public class AggrVariable
-    {
-
-        //TODO: Probably Remove Source
-        /// <summary>
-        /// Source of Variable. The source can be 1) observation and 2) clinical
-        /// </summary>
-        [Description("Source of the variable the source can be 1) observation and 2) clinical")]
-        public string Source { get; set; }
-        /// <summary>
-        /// Code 
-        /// </summary>
-        [Description("Variable code")]
-        [JsonRequired]
-        public string Code { get; set; }
-        /// <summary>
-        /// Weight
-        /// </summary>
-        [Description("Variable weight. This is the A in the Ax+B regression function.")]
-        [JsonRequired]
-        public double Weight { get; set; }
-
-
-        public double? Min { get; set; }
-
-        public double? Max { get; set; }
-
+        
     }
 }

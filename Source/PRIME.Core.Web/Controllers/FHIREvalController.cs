@@ -46,7 +46,6 @@ namespace PRIME.Core.Web.Controllers
 
 
             LocalFhirConditionRepository repository = new LocalFhirConditionRepository(model.BundleJson);
-
             await repository.Init(model.PatientId);
             await repository.Aggregate(model.PatientId, _aggregator, new List<AggrModel>()
             {

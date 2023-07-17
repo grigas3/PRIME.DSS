@@ -1,0 +1,11 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "OutputCode": "daytime sleep.",
+  "Code": "LYING",
+  "Name": "daytime sleepiness",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "MetaScaleA": 0.2,
+  "MetaScaleB": 30
+}

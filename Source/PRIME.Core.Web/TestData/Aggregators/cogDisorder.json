@@ -1,0 +1,12 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Max",
+  "OutputCode": "cog.disorder",
+  "Code": "UPDRS_I_0",
+  "Name": "cog.disorder",
+  "CodeNameSpace": "www.netmed360.com",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "Threshold": true,
+  "ThresholdValue": 1
+}

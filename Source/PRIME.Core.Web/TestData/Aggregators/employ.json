@@ -1,0 +1,12 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "OutputCode": "employment",
+  "Code": "AGE",
+  "CodeNamespace": "PRIME",
+  "Name": "employment",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "MetaScaleA": 1,
+  "MetaScaleB": 65
+}

@@ -19,5 +19,11 @@ namespace PRIME.Core.Common.Interfaces
         /// Name
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// If not numeric possible values for the variable
+        /// </summary>
+        List<string> Values { get;  }
+        
     }
 }

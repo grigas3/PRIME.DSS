@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PRIME.Core.Common.Interfaces;
 using PRIME.Core.Common.Models.CDS;
 using PRIME.Core.Context.Entities;
+using PRIME.Core.DSS;
 using PRIME.Core.Services.FHIR;
 
 namespace PRIME.Core.Web.Controllers
@@ -108,28 +110,6 @@ namespace PRIME.Core.Web.Controllers
             {
                 return BadRequest("You should provide a proper FHIR Server");
             }
-
-            CDSClient client = null;
-
-            if (request.Context.ClientId.HasValue)
-            {
-
-                client = (await _repositoryService.GetAsync<CDSClient>(e => e.Id == request.Context.ClientId.Value))
-                    .FirstOrDefault();
-            }
-            else 
-             client = (await _repositoryService.GetAsync<CDSClient>(e => e.Code == request.Context.ClientCode)).FirstOrDefault();
-            if (client == null)
-            {
-                return BadRequest($"Client with code {request.Context.ClientCode} does not exist");
-            }
-
-            var id = client.Id;
-
-
-            var aggregators = (await _repositoryService.GetAsync<AggrModel>(e => e.CDSClientId ==id)).ToList();
-
-
             //Get Data from FHIR
 
             FhirConditionRepository repository = new FhirConditionRepository(new FhirProxyConfiguration()
@@ -141,23 +121,28 @@ namespace PRIME.Core.Web.Controllers
 
             });
 
-            await repository.Init(request.Context.PatientId);
-            await repository.Aggregate(request.Context.PatientId,_aggregator, aggregators);
-
-
-            if (request.EvaluateDSS)
+            try
             {
-                IEnumerable<Card> cards = await _cDsService.GetCardsAsync(repository, id);
-                return Ok(cards);
+                //Evaluate DSS
+                var r=await CDSSMainEvaluator.EvaluateAsync(
+                    _cDsService,
+                    _aggregator,
+                    _repositoryService,
+                    repository,
+                    request.Context.PatientId,
+                    request.Context.ClientId, 
+                    request.Context.ClientCode,
+                    request.EvaluateDSS);
+
+                return Ok(r.Item1);
+
             }
-            else
+            catch (Exception ex)
             {
-                var inputs  = await _cDsService.GetConditionsAsync(repository, id,true);
-                return Ok(inputs);
+                return BadRequest((ex.Message));
             }
 
-            
-            
+
 
         }
     }

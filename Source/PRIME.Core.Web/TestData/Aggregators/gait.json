@@ -1,0 +1,12 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "OutputCode": "gait",
+  "Code": "GAIT",
+  "CodeNamespace": "www.netmed360.com",
+  "Name": "gait",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "MetaScaleA": 10,
+  "MetaScaleB": 1.5
+}

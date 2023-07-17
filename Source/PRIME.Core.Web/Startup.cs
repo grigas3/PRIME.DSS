@@ -61,6 +61,7 @@ namespace PRIME.Core.Web
             services.AddTransient<IDSSRunner, DSSRunner>();
             services.AddTransient<ICDSService, CDSService>();
             services.AddTransient<IMedCheckService, MedCheckService>();
+            services.AddTransient<IProteinCheckService, ProteinCheckService>();
             services.AddTransient<IDrugRepository, DrugService>();
             //TODO: Replace with proper data proxy
             //services.AddTransient<IDataProxy, DataProxy>();

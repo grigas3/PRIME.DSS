@@ -1,0 +1,18 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "Code": "OFF",
+  "CodeNameSpace": "PRIME",
+  "Name": "OFF",
+  "Version": "1.0",
+  "Variables": [
+    {
+      "Source": "www.prime.com",
+      "Code": "OFF",
+      "Weight": 1.0
+    }
+  ],
+  "Beta": 0.0,
+  "MetaScaleA": 0.5,
+  "MetaScaleB": 1.0
+}

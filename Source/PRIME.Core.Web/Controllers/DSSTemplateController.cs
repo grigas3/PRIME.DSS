@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using PRIME.Core.DSS;
 using PRIME.Core.DSS.Fuzzy;
 using PRIME.Core.DSS.Treatment;
+using PRIME.Core.Web.Extensions;
 
 namespace PRIME.Core.Web.Controllers
 {
@@ -323,6 +325,12 @@ namespace PRIME.Core.Web.Controllers
         }
 
 
+        private static DSSConfig CreateDexiYesNo()
+        {
+            return ModelExtensions.GetDSSConfig("modelyesno.json");
+            
+        }
+
         private static FuzzyCollection CreateManagePDCatS()
         {
             return new FuzzyCollection(new List<string>
@@ -351,9 +359,21 @@ namespace PRIME.Core.Web.Controllers
                 RuleModel = collection,
             };
         }
+        private static TreatmentClassifier CreateClassifier(string name, string code, DSSConfig collection)
+        {
+            return new TreatmentClassifier()
+            {
+                Name = name,
+                Code = code,
+                CodeNamespace = "PRIME",
+                DexiModel = collection,
+            };
+        }
+
+       
 
         [HttpGet]
-        public async Task<IActionResult> Get(string id,string name,string code)
+        public IActionResult Get(string id,string name,string code)
         {
             if (string.IsNullOrEmpty(id))
                 return BadRequest("ID is empty");
@@ -374,6 +394,12 @@ namespace PRIME.Core.Web.Controllers
             {
                 return Ok(CreateClassifier(name, code, CreateManagePDCat3()));
             }
+            else if (id.ToLower() == "pdmanager1")
+            {
+                return Ok(CreateClassifier(name, code, CreateDexiYesNo()));
+            }
+           
+
             else
             {
                 return Ok();

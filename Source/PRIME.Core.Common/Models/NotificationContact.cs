@@ -21,9 +21,22 @@ namespace PRIME.Core.Common.Models
 
 
         /// <summary>
+        /// Email
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// Phone
+        /// </summary>
+        public string Phone { get; set; }
+
+        /// <summary>
         /// User or system preferred message type
         /// </summary>
         public PDMessageType PreferredMessageType { get;  }
+
+
+        
 
 
     }

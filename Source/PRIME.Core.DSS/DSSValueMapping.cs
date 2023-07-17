@@ -10,21 +10,38 @@ namespace PRIME.Core.DSS
     /// <summary>
     /// DSS Value Mapping
     /// </summary>
-    public class DSSValueMapping : IDSSValueMapping
-    {
-        /// <summary>
-        /// Name in Dexi Model
-        /// </summary>
-        [Description("name")]
-        public string Name { get; set; }
-
-        /// <summary>
+    public class DSSValueMapping : IDSSValueMapping,IVariable
+    {    /// <summary>
         /// Observation or Patient History Code
         /// </summary>
         [Description("Code")]
         [JsonRequired]
         public string Code { get; set; }
 
+        /// <summary>
+        /// Code Namespace
+        /// </summary>
+        public string CodeNameSpace { get; }
+
+        /// <summary>
+        /// Name in Dexi Model
+        /// </summary>
+        [Description("name")]
+        public string Name { get; set; }
+
+        public List<string> Values
+        {
+            get
+            {
+                if (CategoryMapping == null)
+                    return null;
+                // Get Values by the order of mapping
+                return CategoryMapping.OrderBy(e=>e.Value).Select(e => e.Name).ToList();
+            }
+
+        }
+
+    
         /// <summary>
         /// Default Value.
         /// This value is used if the attribute is not available in the repository
@@ -42,7 +59,6 @@ namespace PRIME.Core.DSS
         /// 2) clinical 
         /// </summary>
         [Description("Source of attribute. The possible values are 1) observation and 2) clinical ")]
-        [JsonRequired]
         public string Source { get; set; }
 
         /// <summary>
@@ -94,7 +110,8 @@ namespace PRIME.Core.DSS
         /// <returns></returns>
         public int? GetCategoryMapping(string cat)
         {
-            return CategoryMapping.FirstOrDefault(e => e.Name == cat)?.Value; // g[value];
+         
+                return CategoryMapping.FirstOrDefault(e => e.Name == cat)?.Value; // g[value];
         }
 
         /// <summary>
@@ -119,5 +136,7 @@ namespace PRIME.Core.DSS
 
             return (int) cvalue;
         }
+
+      
     }
 }

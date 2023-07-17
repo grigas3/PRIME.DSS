@@ -9,15 +9,19 @@ namespace PRIME.Core.Common.Interfaces
     /// </summary>
     public interface IObservation:ICondition
     {
-        /// <summary>
-        /// Code Name space
-        /// </summary>
-        string CodeNameSpace { get; set; }
+        
         /// <summary>
         /// Timestamp
         /// </summary>
         long Timestamp { get; set; }
 
+        /// <summary>
+        /// Description
+        /// </summary>
         string Description { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        string Category { get; set; }
     }
 }

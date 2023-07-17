@@ -82,6 +82,10 @@ interface CDSClient {
     description: string;
     code: string;
     createdBy: string;
+    url: string;
+    authorizationUrl: string;
+    authenticationUrl: string;
+    resourceUrl: string;
  
     
 }

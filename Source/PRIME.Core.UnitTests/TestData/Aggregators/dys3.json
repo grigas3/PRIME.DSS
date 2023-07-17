@@ -1,0 +1,10 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "OutputCode": "dyskinesia",
+  "Code": "UPDRS_PARTIV_0",
+  "Name": "dyskinesia",
+  "Version": "1.0",
+  "Threshold": true,
+  "ThresholdValue": 1
+}

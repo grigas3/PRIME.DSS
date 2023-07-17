@@ -1,0 +1,12 @@
+{
+  "AggregationType": "Average",
+  "MetaAggregationType": "Average",
+  "OutputCode": "tremor",
+  "Code": "TREMOR",
+  "CodeNameSpace": "www.netmed360.com",
+  "Name": "Tremor",
+  "Version": "1.0",
+  "Beta": 0.0,
+  "MetaScaleA": 100,
+  "MetaScaleB": 0.05
+}

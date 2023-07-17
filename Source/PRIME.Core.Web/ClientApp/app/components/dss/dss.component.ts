@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ViewChild,Component, OnInit, Inject } from '@angular/core';
 import { Http } from '@angular/http';
 import { ActivatedRoute } from '@angular/router';
 
@@ -19,7 +19,7 @@ export class DSSComponent implements  OnInit {
     private dssDummyUrl: string;
     private dssTemplateUrl: string;
     private dssSchemaUrl: string;
-    
+    @ViewChild("fileInput") fileInput: any;
     constructor(private route: ActivatedRoute,http: Http, @Inject('BASE_URL') baseUrl: string) {
         this.httpHandler = http;
         this.dssFetchUrl = baseUrl + 'api/v1/dss/';
@@ -37,7 +37,8 @@ export class DSSComponent implements  OnInit {
         this.templates.push( { name: 'ManagePD1' } as CDSTemplate);
         this.templates.push( { name: 'ManagePD2' } as CDSTemplate);
         this.templates.push( { name: 'ManagePD3' } as CDSTemplate);
-        this.templates.push( { name: 'ManagePDS' } as CDSTemplate);
+        this.templates.push({ name: 'ManagePDS' } as CDSTemplate);
+        this.templates.push({ name: 'PDManager1' } as CDSTemplate);
 
 
         this.httpHandler.get(this.dssFetchUrl).subscribe(result => {
@@ -92,8 +93,41 @@ export class DSSComponent implements  OnInit {
     };
     public onSubmit(): void {
 
+        let fi = this.fileInput.nativeElement;
+        if (fi.files && fi.files[0]) {
+            let fileToUpload = fi.files[0];
+
+            if (fileToUpload) {
+                let input = new FormData();
+                input.append("file", fileToUpload);
+
+
+                this.httpHandler
+                    .post("/api/v1/dexi", input).subscribe(result => {
+                        var file = result.json() as FileOutput;
+
+                        this.newDSS.dexiFile = file.fileName;
+                        this.submitDss();
+                    });
+
+
+                //this.uploadService.upload(fileToUpload)
+                //    .subscribe(res => {
+                //        console.log(res);
+                //    });
+            } else {
+                console.log("FileToUpload was null or undefined.");
+            }
+        } else {
+            this.submitDss();
+        }
+
         
 
+    }
+
+
+    private submitDss(): void {
         this.httpHandler.post(this.dssFetchUrl, this.newDSS).subscribe(result => {
 
             this.logOutput.push({
@@ -102,8 +136,8 @@ export class DSSComponent implements  OnInit {
             alert('Model Saved');
             this.refresh();
         }, error => console.error(error));
-
     }
+
     public edit(client: DSSModel): void {
 
         console.log(client.id);
@@ -138,7 +172,11 @@ export class DSSComponent implements  OnInit {
 
     }
 }
+interface FileOutput {
 
+    fileName: string;
+    
+}
 interface LogOutput {
 
     message: string;
@@ -151,7 +189,7 @@ interface DSSModel {
     name: string;
     code: string;
     version: string;
-    
+    dexiFile:string;
     cdsClientName: string;
     description: string;
     treatmentSuggestion: boolean;

@@ -53,18 +53,15 @@ export class DSSEditorComponent implements OnInit {
         console.log(url);
 
         this.httpClient.get(url).subscribe(result => {
-            console.log(result);
+            
             this.treatment = result.json() as TreatmentClassifier;
-
+            console.log(this.treatment);
             
             if (this.treatment.ruleModel &&
                 this.treatment.ruleModel.rules &&
                 this.treatment.ruleModel.rules.length > 0) {
-
                 this.fuzzyRules = this.treatment.ruleModel.rules;
-
                 this.dssRules = this.treatment.ruleModel.rules[0].orRules;
-
                 //this.dssRules = this.treatment.ruleModel.rules[0].orRules;
             }
 
@@ -186,15 +183,19 @@ export class DSSEditorComponent implements OnInit {
 
         var url = this.baseUrl + 'api/v1/dssconfig';
         var self = this;
-        this.updateVariables();
-        this.treatment.ruleModel = {} as FuzyCollection;
+  
+       
        
         //var fRule = {} as FuzyRule;
         //fRule.fuzzy = true;
         //fRule.name = this.treatment.name;
         //fRule.orRules = (this.dssRules);
-        this.treatment.ruleModel.rules = this.fuzzyRules;
-        this.treatment.ruleModel.variables = this.variables;
+        if (this.fuzzyRules&&this.fuzzyRules.length>0) {
+            this.updateVariables();
+            this.treatment.ruleModel = {} as FuzyCollection;
+            this.treatment.ruleModel.rules = this.fuzzyRules;
+            this.treatment.ruleModel.variables = this.variables;
+        }
         this.treatment.id = this.modelId;
         console.log(this.treatment);
         var request = this.httpClient.post(url, this.treatment).subscribe(
@@ -225,8 +226,27 @@ interface TreatmentClassifier {
     option: string;
     treatmentSuggestion:boolean,
     ruleModel: FuzyCollection;
+    dexiModel:DexiModel;
     preconditionCode:string;
     preconditions: FuzzyVariable[];
+}
+
+
+interface DexiModel {
+
+    code: string;
+    name: string;
+    version: string;
+    dexiFile:string;
+    input:DexiInput[];
+}
+
+interface DexiInput {
+
+    name: string;
+    valueType: string;
+    categoryMapping: DSSValueCategory[];
+    numericBins: DSSNumericBin[];
 }
 
 interface FuzyCollection {
@@ -263,4 +283,19 @@ interface FuzzyVariable {
     code: string;
     name: string;
     
+}
+
+interface DSSValueCategory {
+    value: number;
+    name: string;
+
+}
+
+
+interface DSSNumericBin {
+    
+    minValue: number;
+    maxValue: number;
+    value: number;
+    valueMeaning:string;
 }

@@ -93,8 +93,8 @@ namespace PRIME.Core.MedCheck.Drug
             [JsonProperty("name")]
             public string Name { get; set; }
 
-            [JsonProperty("tty")]
-            public Tty Tty { get; set; }
+            //[JsonProperty("tty")]
+            //public Tty Tty { get; set; }
         }
 
         public partial class SourceConceptItem
@@ -119,7 +119,7 @@ namespace PRIME.Core.MedCheck.Drug
             public long Rxcui { get; set; }
         }
 
-        public enum Tty { In, Pin };
+        //public enum Tty { In, Pin };
 
         public enum Severity { NA };
 
@@ -130,7 +130,7 @@ namespace PRIME.Core.MedCheck.Drug
 
         public static class Serialize
         {
-            public static string ToJson(this DrugResponse self) => JsonConvert.SerializeObject(self, Converter.Settings);
+            public static string ToJson(this DrugResponse self) => JsonConvert.SerializeObject(self);
         }
 
         internal static class Converter
@@ -141,7 +141,7 @@ namespace PRIME.Core.MedCheck.Drug
                 DateParseHandling = DateParseHandling.None,
                 Converters =
             {
-                TtyConverter.Singleton,
+           //     TtyConverter.Singleton,
                 SeverityConverter.Singleton,
                 new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             },
@@ -179,46 +179,46 @@ namespace PRIME.Core.MedCheck.Drug
             public static readonly ParseStringConverter Singleton = new ParseStringConverter();
         }
 
-        internal class TtyConverter : JsonConverter
-        {
-            public override bool CanConvert(Type t) => t == typeof(Tty) || t == typeof(Tty?);
+        //internal class TtyConverter : JsonConverter
+        //{
+        //    public override bool CanConvert(Type t) => t == typeof(Tty) || t == typeof(Tty?);
 
-            public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-            {
-                if (reader.TokenType == JsonToken.Null) return null;
-                var value = serializer.Deserialize<string>(reader);
-                switch (value)
-                {
-                    case "IN":
-                        return Tty.In;
-                    case "PIN":
-                        return Tty.Pin;
-                }
-                throw new Exception("Cannot unmarshal type Tty");
-            }
+        //    public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        //    {
+        //        if (reader.TokenType == JsonToken.Null) return null;
+        //        var value = serializer.Deserialize<string>(reader);
+        //        switch (value)
+        //        {
+        //            case "IN":
+        //                return Tty.In;
+        //            case "PIN":
+        //                return Tty.Pin;
+        //        }
+        //        throw new Exception("Cannot unmarshal type Tty");
+        //    }
 
-            public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-            {
-                if (untypedValue == null)
-                {
-                    serializer.Serialize(writer, null);
-                    return;
-                }
-                var value = (Tty)untypedValue;
-                switch (value)
-                {
-                    case Tty.In:
-                        serializer.Serialize(writer, "IN");
-                        return;
-                    case Tty.Pin:
-                        serializer.Serialize(writer, "PIN");
-                        return;
-                }
-                throw new Exception("Cannot marshal type Tty");
-            }
+        //    public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        //    {
+        //        if (untypedValue == null)
+        //        {
+        //            serializer.Serialize(writer, null);
+        //            return;
+        //        }
+        //        var value = (Tty)untypedValue;
+        //        switch (value)
+        //        {
+        //            case Tty.In:
+        //                serializer.Serialize(writer, "IN");
+        //                return;
+        //            case Tty.Pin:
+        //                serializer.Serialize(writer, "PIN");
+        //                return;
+        //        }
+        //        throw new Exception("Cannot marshal type Tty");
+        //    }
 
-            public static readonly TtyConverter Singleton = new TtyConverter();
-        }
+        //    public static readonly TtyConverter Singleton = new TtyConverter();
+        //}
 
         internal class SeverityConverter : JsonConverter
         {

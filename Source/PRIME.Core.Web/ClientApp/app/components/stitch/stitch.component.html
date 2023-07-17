@@ -1,0 +1,101 @@
+<h1>PRIME STITCH</h1>
+
+
+
+<div class="alert alert-warning">STITCH UI for Protein Interactions</div>
+<div class="ui raised segment">
+
+    <div class="row">
+        <div class="col-sm-6 col-lg-4">
+
+            <div>
+                <h2 class="ui header">Interaction input</h2>
+                <hr />
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label>Terms</label>
+                        <input type="text" class="form-control" [(ngModel)]="term" placeholder="Drug1,Drug2">
+                        <small class="form-text text-muted">Enter term </small>
+                    </div>
+                    
+
+                </div>
+            <div class="btn-toolbar">
+
+                <div class="btn-group">
+                    <button type="button" (click)="match()" class="btn btn-warning ">Check</button>
+                </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-sm-6 col-lg-8">
+
+
+            <div *ngIf="!matchResults" class="alert alert-info">
+                Enter a term to find out which proteins match the term in human
+            </div>
+
+
+            <div *ngIf="matchResults">
+                <h2 class="ui header">Proteins</h2>
+                <table class='table' *ngIf="matchResults">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Taxon Name Drug</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let results of matchResults">
+
+
+                            <td>{{ results.preferredName }}</td>
+                            <td>{{ results.taxonName }}</td>
+                            
+                            <td><a class="btn  btn-sm btn-success" (click)="interactions(results)">Interactions</a></td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+            <div *ngIf="interactionResults">
+                <h2 class="ui header">Protein interactions</h2>
+                <table class='table' *ngIf="interactionResults">
+                    <thead>
+                        <tr>
+                            <th>ID A</th>
+                            <th>Name A</th>
+                            <th>ID B</th>
+                            <th>Name B</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let results of interactionResults">
+
+
+                            <td>{{ results.idA }}</td>
+                            <td>{{ results.nameA }}</td>
+                            <td>{{ results.idB }}</td>
+                            <td>{{ results.nameB }}</td>
+                            <td>{{ results.score }}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</div>

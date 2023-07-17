@@ -25,9 +25,17 @@ namespace PRIME.Core.Common.Interfaces
         Task<IEnumerable<IObservation>> Run(string patientId, string code, string codeNamepace, DateTime? lastExecutionTime,string aggregationType= null, string filterType = null);
 
         Task<IEnumerable<IObservation>> Run(string patientId, string code,string codeNamespace, IEnumerable<PDObservation> rawObs, string config);
-
+        /// <summary>
+        /// Get Single Observation
+        /// </summary>
+        /// <param name="patientId"></param>
+        /// <param name="code"></param>
+        /// <param name="codeNamespace"></param>
+        /// <param name="rawObs"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
         Task<IObservation> RunSingle(string patientId, string code, string codeNamespace, IEnumerable<PDObservation> rawObs, string config);
-
+        
 
 
     }
